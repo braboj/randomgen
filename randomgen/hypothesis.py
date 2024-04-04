@@ -45,7 +45,7 @@ class ChiSquareTest(HypothesisTest):
 
         return message
 
-    def set_random_numbers(self, numbers):
+    def set_numbers(self, numbers):
         self.random_numbers = numbers
         return self
 
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     # The result should be True
     hypothesis = (
         ChiSquareTest()
-        .set_random_numbers(nums)
+        .set_numbers(nums)
         .set_probabilities(probs)
         .calc_chi()
         .calc_p()
@@ -147,7 +147,7 @@ if __name__ == "__main__":
 
     hypothesis = (
         ChiSquareTest()
-        .set_random_numbers(nums)
+        .set_numbers(nums)
         .set_probabilities(probs)
         .calc_chi()
         .calc_p()
