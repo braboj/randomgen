@@ -22,7 +22,7 @@ def main(randomgen):
     # Example usage using a fluent interface
     rg = (
         randomgen()
-        .set_bins(nums)
+        .set_numbers(nums)
         .set_probabilities(prob)
         .validate()
     )
@@ -33,8 +33,7 @@ def main(randomgen):
     # Print the expected histogram and the actual histogram
     expected = (
         Histogram()
-        .set_histogram(dict(zip(nums, prob)))
-        # .plot()
+        .from_dict(dict(zip(nums, prob)))
     )
     print(f"Expected histogram: {expected}")
 
@@ -42,7 +41,7 @@ def main(randomgen):
     observed = (
         Histogram()
         .set_numbers(randoms)
-        .build()
+        .calc()
         # .plot()
     )
     print(f"Observed histogram: {observed}")
@@ -50,9 +49,9 @@ def main(randomgen):
     # Test the distribution of random numbers
     hypothesis = (
         ChiSquareTest()
-        .set_numbers(randoms)
-        .set_probabilities(prob)
-        .calculate()
+        .set_observed_numbers(randoms)
+        .set_expected_probabilities(prob)
+        .calc()
         .test()
     )
     print("Hypothesis is: ", hypothesis)

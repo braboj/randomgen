@@ -52,6 +52,8 @@ def next_num(self):
 ### 1. Select the technology stack
 
 - Language: Python 3.12+
+- Python IDE: PyCharm Community Edition
+- Linting: PyCharm built-in linter
 - Testing: Pytest
 - Version Control: Git
 - Git Hosting: GitHub
@@ -224,10 +226,10 @@ from randomgen.core import RandomGenV1
 
 # Create a random number generator
 rg = (
-    RandomGenV1()
-    .set_bins([-1, 0, 1, 2, 3])
-    .set_probabilities([0.01, 0.3, 0.58, 0.1, 0.01])
-    .validate()
+   RandomGenV1()
+   .set_numbers([-1, 0, 1, 2, 3])
+   .set_expected_probabilities([0.01, 0.3, 0.58, 0.1, 0.01])
+   .validate()
 )
 
 # Get a random number
@@ -295,8 +297,43 @@ some latency.
 ### 11. Implement automated integration tests for the REST API
 
 The integration tests showed that we need to wrap the exceptions by the backend and return a 
-well-defined HTTP status code. Maybe it is good to implement a simple health check endpoint to check
-the status of the API.
+well-defined HTTP status code. 
+
+### 12. Refactor webserver after the integration tests
+
+First, we will refactor the webserver to return a well-defined HTTP status code. We will also
+add a configuration endpoint to allow the user to configure the bins and 
+probabilities of a custom distribution histogram.
+
+The response format will be also improved for better readability.
+
+```json
+{
+    "numbers": [1, 1, 1, 1, 0, 1, 1, 1, 1, 0],
+    "quality": {
+      "chi_square_test": {
+        "chi_square": 44.4333333333333,
+        "df": 1,
+        "is_fair": 0,
+        "p_value": 2.63168375980172e-11
+      },
+      "expected_histogram": {
+        "-1": 0.01,
+        "0": 0.3,
+        "1": 0.58,
+        "2": 0.1,
+        "3": 0.01
+      },
+      "observed_histogram": {
+        "0": 0.2,
+        "1": 0.8
+      }
+    },
+    "version": 1
+}
+```
+
+
 
 ### . Prepare the project distribution
 

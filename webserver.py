@@ -1,52 +1,89 @@
-import requests
-from flask import Flask, jsonify, request
 from randomgen.core import RandomGenV1, RandomGenV2
 from randomgen.hypothesis import ChiSquareTest
-from collections import OrderedDict
-from randomgen.errors import RandomGenError
+from flask import Flask, jsonify, request
+from randomgen.helpers import Histogram
+
+
+###############################################################################
+# Application
+###############################################################################
 
 app = Flask(__name__)
 app.bins = [-1, 0, 1, 2, 3]
 app.probabilities = [0.01, 0.3, 0.58, 0.1, 0.01]
 app.max_numbers = 10000
 
-@app.errorhandler(RandomGenError)
-def handle_error(e):
-    return jsonify({'error': str(e)}), 400
 
-def handle_randomgen_request(randomgen, amount):
+###############################################################################
+# Helpers
+###############################################################################
 
+def generate_random_numbers(randomgen, amount, version=1):
+    # Check if the number of items to be generated is within the limit
     if amount > app.max_numbers:
         return jsonify({'error': 'Amount of numbers cannot exceed 1000'})
 
+    # Generate random numbers
     random_numbers = [randomgen.next_num() for _ in range(amount)]
 
+    # Expected distribution
+    expected = dict(zip(app.bins, app.probabilities))
+
+    # Observed distribution
+    observed = (
+        Histogram()
+        .set_numbers(random_numbers)
+        .calc()
+    )
+
+    # Chi-Square test to check the quality of the random number generator
     hypothesis = (
         ChiSquareTest()
-        .set_numbers(random_numbers)
-        .set_probabilities(app.probabilities)
-        .calculate()
+        .set_observed_numbers(random_numbers)
+        .set_expected_probabilities(app.probabilities)
+        .calc()
     )
 
-    response = OrderedDict(
-        {
-        'version': 1,
-        'distribution': app.probabilities,
-        'is_fair': int(hypothesis.test()),
-        'chi_square': hypothesis.chi_square,
-        'p_value': hypothesis.p_value,
-        'df': hypothesis.df,
+    # Prepare the response
+    response = {
+
+        'version': version,
         'numbers': random_numbers,
-        }
-    )
 
+        "quality": {
+            "chi_square_test":
+                {
+                    'is_fair': int(hypothesis.test()),
+                    'chi_square': hypothesis.chi_square,
+                    'p_value': hypothesis.p_value,
+                    'df': hypothesis.df,
+                },
+            'expected_histogram': expected,
+            'observed_histogram': observed,
+        },
+
+    }
+
+    # Return the response
     return jsonify(response)
 
 
-# A simple route that returns a string
+###############################################################################
+# Event handlers
+###############################################################################
+
+# Global error handler
+@app.errorhandler(Exception)
+def handle_error(e):
+    return jsonify({'error': str(e)}), 500
+
+
+###############################################################################
+# Endpoints
+###############################################################################
+
 @app.get('/')
 def hello_world():
-
     body = (
         """
         <h1>Random Number Generator API</h1>
@@ -54,15 +91,17 @@ def hello_world():
         Author: Branimir Georgiev
         
         <p>
-        The fairness of the random number generator is tested using the Chi-Square test. Larger
-        numbers of generated random numbers will result in a more accurate test.
+        The fairness of the random number generator is tested using the 
+        Chi-Square test. Larger numbers of generated random numbers will 
+        result in a more accurate test.
         </p>
         
         <p>Endpoints:</p>
         
         <ul>
-            <li> /api/v1/randomgen?numbers=1000 </li>
-            <li> /api/v2/randomgen?numbers=1000 </li>
+            <li> GET /api/v1/randomgen?numbers=1000 </li>
+            <li> GET /api/v2/randomgen?numbers=1000 </li>
+            <li> POST /api/config (see documentation) </li>
         </ul>
     
         """
@@ -70,19 +109,18 @@ def hello_world():
 
     return body
 
+
 @app.post('/api/config')
 def api_config():
-    app.bins = request.json['bins']
+    app.numbers = request.json['bins']
     app.probabilities = request.json['probabilities']
+    return jsonify({'bins': app.numbers, 'probabilities': app.probabilities})
 
-    return jsonify({'bins': app.bins, 'probabilities': app.probabilities})
 
-
+# A route to get the configuration of the random number generator
 @app.get('/api/v1/randomgen')
 def api_v1_generate_numbers():
-
-    # Query: /api/v1/randomgen?amount=10
-    response = {}
+    # Query: /api/v1/randomgen?numbers=10
 
     # Parse the query parameter amount
     amount = request.args.get('numbers', default=1, type=int)
@@ -90,31 +128,31 @@ def api_v1_generate_numbers():
     # Generate random numbers from -1 to 3 using a custom distribution
     rg = (
         RandomGenV1()
-        .set_bins(app.bins)
-        .set_probabilities(app.probabilities)
+        .set_numbers(app.bins)
+        .set_expected_probabilities(app.probabilities)
         .validate()
     )
 
-    return handle_randomgen_request(rg, amount)
+    return generate_random_numbers(rg, amount, version=1)
 
 
 @app.get('/api/v2/randomgen')
 def api_v2_generate_numbers():
-
-    # Query: /api/v1/randomgen?amount=10
+    # Query: /api/v2/randomgen?numbers=10
 
     # Parse the query parameter amount
     amount = request.args.get('numbers', default=1, type=int)
 
     # Create the random number generator object
     rg = (
-        RandomGenV1()
-        .set_bins(app.bins)
-        .set_probabilities(app.probabilities)
+        RandomGenV2()
+        .set_numbers(app.bins)
+        .set_expected_probabilities(app.probabilities)
         .validate()
     )
 
-    return handle_randomgen_request(rg, amount)
+    return generate_random_numbers(rg, amount, version=2)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
