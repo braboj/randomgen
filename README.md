@@ -1,5 +1,6 @@
 ## Problem Statement
 
+### Description
 Given Random Numbers are [-1, 0, 1, 2, 3] and Probabilities are [0.01, 0.3, 
 0.58, 0.1, 0.01] if we call nextNum() 100 times, we may get the following 
 results. As the results are random, these particular results are unlikely.
@@ -12,7 +13,7 @@ results. As the results are random, these particular results are unlikely.
 3: 0 times
 ```
 
-**Instructions:**
+### Instructions
 
  - Write a random number generator that returns numbers based on the 
    probabilities provided.
@@ -78,18 +79,19 @@ We can proceed with the implementation.
 
 We don't have any information on how the data is generated, for example, how 
 many samples were taken to get the given distribution. Typically, this may lead
-to skewed results due to under-sampling. Visually, our distribution looks like a
-custom distribution.
+to skewed results due to under-sampling. 
 
-![Custom_Distribution.png](assets/images/custom_distribution.png)
-
-It doesn't seem to be a binomial distribution... 
+The given distribution doesn't seem to be a binomial distribution... 
 
 ![Binomial_Distribution.png](assets/images/binomial_distribution.png)
 
 ... or a Poisson distribution.
 
 ![Poisson_Distribution.png](assets/images/poisson_distribution.png)
+
+Visually, our distribution looks like a skewed custom distribution.
+
+![Custom_Distribution.png](assets/images/custom_distribution.png)
 
 We will assume that the given distribution is correct and proceed with the
 implementation. We will test our implementation with a large number of samples
@@ -117,7 +119,7 @@ Questions:
 2. Are we allowed to use external libraries for statistical tests and 
    visualization?
 
-### 5. Get creative and draw the system design
+### 5. Brainstorm the system design
 
 We will implement two classes, one using `random.choices` and the other using
 `random.random`. We will provide an abstract class to be used as an interface for
@@ -174,7 +176,7 @@ print("Random number is: ", num)
 Typically, at this stage the client shall approve the design, and we can proceed with the 
 prototype implementation.
 
-### 6. Implement the core
+### 6. Implement the core prototype
 
 We will implement the following classes:
 
@@ -191,8 +193,10 @@ will have the following endpoints:
 
 1. `/api/v1/randomgen?number`: Returns a number of random numbers based on
    the random.random method.
-1. `/api/v2/randomgen?number`: Returns a number of random numbers based on
+2. `/api/v2/randomgen?number`: Returns a number of random numbers based on
    the random.choice method.
+3. `/api/v1/config`: An optional endpoint to configure the random numbers and
+   probabilities.
 
 ### 8. Manual Integration tests
 
@@ -287,10 +291,12 @@ should be fast enough to generate random numbers in a reasonable time. A reasona
 backend is around 50 msec, bearing in mind that the REST API is going to stack on it and add
 some latency.
 
-### 12. Implement automated integration tests for the REST API
 
+### . Implement automated integration tests for the REST API
 
-### . Containerize
+### . Prepare the project distribution
+
+### . Containerize the solution
 
 We will create a Dockerfile to containerize the solution. We will also create a
 `docker-compose.yml` file to run the tests in a container. The application
@@ -299,7 +305,7 @@ the solution. The container will guarantee that the solution will run on any
 machine that has Docker installed.
 
 
-### . CI/CD
+### . Create CI/CD pipeline
 
 We will create a GitHub Actions workflow to run the tests on every push to the
 main branch. We will also create a GitHub Actions workflow to build and push the
