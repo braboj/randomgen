@@ -52,8 +52,9 @@ def next_num(self):
 
 - Language: Python 3.12+
 - Testing: Pytest
-- CI/CD: GitHub Actions
 - Version Control: Git
+- Git Hosting: GitHub
+- CI/CD: GitHub Actions
 - Documentation: MkDocs
 
 ### 2. Validate the data from the problem statement
@@ -94,7 +95,7 @@ We will assume that the given distribution is correct and proceed with the
 implementation. We will test our implementation with a large number of samples
 for fairness using the Chi-Squared test.
 
-### 4. Prototyping the solution
+### 4. Proof of concept
 
 ```python
 import random
@@ -104,19 +105,6 @@ class RandomGen(object):
   def __init__(self, random_nums, probabilities):
     self._random_nums = random_nums
     self._probabilities = probabilities
-    
-  def _validate_input(self):
-     
-    if len(self._random_nums) != len(self._probabilities):
-      raise ValueError("Length of random_nums and probabilities should be equal")
-    
-    if sum(self._probabilities) != 1:
-      raise ValueError("Sum of probabilities should be 1")
-    
-    if any(prob < 0 for prob in self._probabilities):
-      raise ValueError("Probabilities should be positive")
-      
-    return self
       
   def next_num(self):
     return random.choices(self._random_nums, self._probabilities)[0]
@@ -124,10 +112,9 @@ class RandomGen(object):
 
 Questions:
 
-1. Is it allowed to use the `random.choices` method?
-2. Do we have constraints regarding the compatibility with older versions of 
+1. Do we have constraints regarding the compatibility with older versions of 
    Python?
-3. Are we allowed to use external libraries for statistical tests and 
+2. Are we allowed to use external libraries for statistical tests and 
    visualization?
 
 ### 5. Get creative and draw the system design
@@ -184,9 +171,8 @@ print("Random number is: ", num)
  print(hist)
 ```
 
-Typically, at this stage the client shall approve the design, and we can proceed
-with the implementation.
-
+Typically, at this stage the client shall approve the design, and we can proceed with the 
+prototype implementation.
 
 ### 6. Implement the core
 
@@ -197,20 +183,114 @@ We will implement the following classes:
 3. `RandomGenV2`: A class using `random.random`.
 4. `Histogram`: A helper class that creates a simple histogram object.
 5. `ChiSquaredTest`: A helper class to perform the Chi-Squared test.
-6. Unit tests for all classes.
 
 ### 7. Implement the REST API with Flask
 
 We will implement a simple REST API using Flask to access the solution. The API
 will have the following endpoints:
 
-1. `/random_number`: Returns a random number based on the probabilities.
-2. `/hypothesis_test`: Returns the result of the Chi-Squared test.
-3. `/histogram`: Returns a histogram of the random numbers.
-4. `/documentation`: Returns the documentation of the solution.
-6. `/version`: Returns the version of the application.
+1. `/api/v1/randomgen?number`: Returns a number of random numbers based on
+   the random.random method.
+1. `/api/v2/randomgen?number`: Returns a number of random numbers based on
+   the random.choice method.
 
-### 7. Containerize
+### 8. Manual Integration tests
+
+The following problems arised during the manuals integration tests:
+
+1. **Rounding errors**: Using older versions of Python yield rounding errors. Round the 
+   probabilities to 3 decimal places.
+
+
+2. **Fairness**: The Chi-Squared test is not fair in case the number of samples is low. The distribution is fair when the number of random values is above 50.
+
+
+3. **Interface** We need to simplify the ChiSquaredTest class to make it more user-friendly. Define method calculate that will the chi-squared, p-value and the degrees of freedom.
+
+
+4. **Configuration**: We will allow the user configure its own distribution using the parameters `numbers` and `probabilities` as defined in the problem statement.
+
+
+### 9. Refactor the backend after the manual tests
+
+Randomgen classes API:
+
+```python
+from randomgen.core import RandomGenV1
+
+# Create a random number generator
+rg = (
+    RandomGenV1()
+    .set_random_nums([-1, 0, 1, 2, 3])
+    .set_probabilities([0.01, 0.3, 0.58, 0.1, 0.01])
+    .validate()
+)
+
+# Get a random number
+num = rg.next_num()
+print("Random number is: ", num)
+```
+
+ChiSquaredTest API:
+
+```
+from randomgen.hypothesis import ChiSquareTest
+
+# Create a hypothesis test
+random_numbers = random.
+hypothesis = (
+  ChiSquareTest()
+  .set_numbers()
+  .set_probabilities([0.01, 0.3, 0.58, 0.1, 0.01])
+  .calculate()
+)
+
+# Hypothesis is True if it is accepted
+print("Hypothesis is: ", hypothesis.test())
+```
+
+Histogram API:
+
+```
+from randomgen.helpers import Histogram
+
+# Create a histogram object
+histogram = (
+     Histogram()
+     .set_numbers(random_numbers)
+     .build()
+     .plot()
+)
+ 
+# Print the histogram
+print(hist)
+```
+
+### 10. Implement unit tests for the backend
+
+**Functional tests**
+
+We will implement unit tests for the Backend using Pytest. We will cover each class
+and method with unit tests to guarantee that the solution is working as expected. 
+
+The testing discovered some bugs in the implementation that are related to the validation of the 
+input parameters. 
+
+**Performance tests**
+
+We will implement performance tests to check the performance of the solution. We will use the
+maximum number of random numbers to check the performance of the solution. Manual testing showed
+that RandomGenV2 is around 3 times slower than RandomGenV1.
+
+The task definition doesn't mention any performance requirements. We will assume that the solution
+should be fast enough to generate random numbers in a reasonable time. A reasonable time for the 
+backend is around 50 msec, bearing in mind that the REST API is going to stack on it and add
+some latency.
+
+### 12. Implement automated integration tests for the REST API
+
+
+### . Containerize
 
 We will create a Dockerfile to containerize the solution. We will also create a
 `docker-compose.yml` file to run the tests in a container. The application
@@ -219,13 +299,13 @@ the solution. The container will guarantee that the solution will run on any
 machine that has Docker installed.
 
 
-### 8. CI/CD
+### . CI/CD
 
 We will create a GitHub Actions workflow to run the tests on every push to the
 main branch. We will also create a GitHub Actions workflow to build and push the
 Docker image to Docker Hub on every release.
 
-### 9. Documentation
+### . Documentation
 
 We will create MkDocs documentation to explain the solution and how to use it.
 
