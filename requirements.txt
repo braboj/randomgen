@@ -2,4 +2,4 @@ matplotlib~=3.8.3
 numpy~=1.26.4
 scipy~=1.13.0
 flask~=3.0.2
-requests~=2.26.0
+requests~=2.31.0

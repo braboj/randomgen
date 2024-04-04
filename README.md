@@ -199,6 +199,17 @@ We will implement the following classes:
 5. `ChiSquaredTest`: A helper class to perform the Chi-Squared test.
 6. Unit tests for all classes.
 
+### 7. Implement the REST API with Flask
+
+We will implement a simple REST API using Flask to access the solution. The API
+will have the following endpoints:
+
+1. `/random_number`: Returns a random number based on the probabilities.
+2. `/hypothesis_test`: Returns the result of the Chi-Squared test.
+3. `/histogram`: Returns a histogram of the random numbers.
+4. `/documentation`: Returns the documentation of the solution.
+6. `/version`: Returns the version of the application.
+
 ### 7. Containerize
 
 We will create a Dockerfile to containerize the solution. We will also create a
