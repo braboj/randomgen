@@ -1,8 +1,12 @@
 from randomgen.errors import (
-    RandomGenLengthError,
+    RandomGenMismatchError,
     RandomGenSumError,
-    RandomGenNegativeError
+    RandomGenEmptyError,
+    RandomGenTypeError,
+    RandomGenOutOfBoundsError
 )
+
+from randomgen.defines import SIZE_LIMIT
 
 import random
 from abc import ABCMeta, abstractmethod
@@ -22,7 +26,15 @@ class RandomGenABC(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def validate_numbers(self):
+        pass
+
+    @abstractmethod
     def set_probabilities(self, probabilities):
+        pass
+
+    @abstractmethod
+    def validate_probabilities(self):
         pass
 
     @abstractmethod
@@ -31,6 +43,14 @@ class RandomGenABC(metaclass=ABCMeta):
 
     @abstractmethod
     def next_num(self):
+        pass
+
+    @abstractmethod
+    def calc_cdf(self):
+        pass
+
+    @abstractmethod
+    def generate(self, amount):
         pass
 
 
@@ -44,25 +64,96 @@ class RandomGenV1(RandomGenABC):
         self.numbers = numbers
         return self
 
+    def validate_numbers(self):
+
+        # Check if the numbers is None
+        if self.numbers is None:
+            raise RandomGenTypeError()
+
+        # Check if the numbers are iterable
+        elif not hasattr(self.numbers, '__iter__'):
+            raise RandomGenTypeError()
+
+        # Check if the numbers list is too large
+        elif len(self.numbers) > SIZE_LIMIT:
+            raise RandomGenOutOfBoundsError()
+
+        # Check if dictionary
+        elif isinstance(self.numbers, dict):
+            raise RandomGenTypeError()
+
+        # Check if the any member is not a number
+        elif not all(isinstance(num, (int, float)) for num in self.numbers):
+            raise RandomGenTypeError()
+
+        # Check if the numbers list is empty
+        elif not self.numbers:
+            raise RandomGenEmptyError()
+
+        return self
+
     def set_probabilities(self, probabilities):
         self.probabilities = probabilities
-        self.cumulative_probabilities = [sum(probabilities[:i + 1]) for i in
-                                         range(len(probabilities))]
         return self
+
+    def validate_probabilities(self):
+
+        # Check if the probabilities is None
+        if self.probabilities is None:
+            raise RandomGenTypeError()
+
+        # Check if the numbers are iterable
+        elif not hasattr(self.probabilities, '__iter__'):
+            raise RandomGenTypeError()
+
+        # Check if the numbers list is too large
+        elif len(self.probabilities) > SIZE_LIMIT:
+            raise RandomGenOutOfBoundsError()
+
+        # Check if empty
+        elif not self.probabilities:
+            raise RandomGenEmptyError()
+
+        # Check if set
+        elif isinstance(self.probabilities, set):
+            raise RandomGenTypeError()
+
+        # Check if dictionary
+        elif isinstance(self.probabilities, dict):
+            raise RandomGenTypeError()
+
+        # Check if the any member is not a number
+        elif not all(isinstance(prob, (int, float)) for prob in self.probabilities):
+            raise RandomGenTypeError()
+
+        # Check if the probabilities are non-negative
+        elif any(probability < 0 for probability in self.probabilities):
+            raise RandomGenTypeError()
+
+        # Check if the probabilities sum to 1
+        elif round(sum(self.probabilities), 3) != 1:
+            raise RandomGenSumError()
+
+        return self
+
+    def calc_cdf(self):
+        self.cumulative_probabilities = [
+            sum(self.probabilities[:i + 1])
+            for i in
+            range(len(self.probabilities))
+        ]
 
     def validate(self):
 
+        self.validate_numbers()
+        self.validate_probabilities()
+
         # Check if the numbers and probabilities' lists have the same length
         if len(self.numbers) != len(self.probabilities):
-            raise RandomGenLengthError()
+            raise RandomGenMismatchError()
 
-        # Check if the probabilities sum to 1
-        if round(sum(self.probabilities), 3) != 1:
-            raise RandomGenSumError()
-
-        # Check if the probabilities are non-negative
-        if any(probability < 0 for probability in self.probabilities):
-            raise RandomGenNegativeError()
+        # After the validation calculate the cumulative probabilities
+        self.calc_cdf()
 
         return self
 
@@ -72,6 +163,9 @@ class RandomGenV1(RandomGenABC):
             if rand <= cum_prob:
                 return self.numbers[i]
 
+    def generate(self, amount):
+        return [self.next_num() for _ in range(amount)]
+
 
 class RandomGenV2(RandomGenABC):
 
@@ -79,26 +173,103 @@ class RandomGenV2(RandomGenABC):
         self.numbers = numbers
         return self
 
+    def validate_numbers(self):
+
+        # Check if the numbers is None
+        if self.numbers is None:
+            raise RandomGenTypeError()
+
+        # Check if the numbers are iterable
+        elif not hasattr(self.numbers, '__iter__'):
+            raise RandomGenTypeError()
+
+        # Check if the numbers list is too large
+        elif len(self.numbers) > SIZE_LIMIT:
+            raise RandomGenOutOfBoundsError()
+
+        # Check if dictionary
+        elif isinstance(self.numbers, dict):
+            raise RandomGenTypeError()
+
+        # Check if the numbers list is not a list of numbers
+        elif not all(isinstance(num, (int, float)) for num in self.numbers):
+            raise RandomGenTypeError()
+
+        # Check if the numbers list is empty
+        elif not self.numbers:
+            raise RandomGenEmptyError()
+
+        return self
+
     def set_probabilities(self, probabilities):
         self.probabilities = probabilities
         return self
 
+    def validate_probabilities(self):
+
+        # Check if the probabilities is None
+        if self.probabilities is None:
+            raise RandomGenTypeError()
+
+        # Check if empty
+        elif not self.probabilities:
+            raise RandomGenEmptyError()
+
+        # Check if the probabilities are iterable
+        elif not hasattr(self.probabilities, '__iter__'):
+            raise RandomGenTypeError()
+
+        # Check if the numbers list is too large
+        elif len(self.probabilities) > SIZE_LIMIT:
+            raise RandomGenOutOfBoundsError()
+
+        # Check if set
+        elif isinstance(self.probabilities, set):
+            raise RandomGenTypeError()
+
+        # Check if dictionary
+        elif isinstance(self.probabilities, dict):
+            raise RandomGenTypeError()
+
+        # Check if the any member is not a number
+        elif not all(isinstance(prob, (int, float)) for prob in self.probabilities):
+            raise RandomGenTypeError()
+
+        # Check if the probabilities are non-negative
+        elif any(probability < 0 for probability in self.probabilities):
+            raise RandomGenTypeError()
+
+        # Check if the probabilities sum to 1
+        elif round(sum(self.probabilities), 3) != 1:
+            raise RandomGenSumError()
+
+        return self
+
+    def calc_cdf(self):
+        self.cumulative_probabilities = [
+            sum(self.probabilities[:i + 1])
+            for i in
+            range(len(self.probabilities))
+        ]
+
     def validate(self):
+
+        # Validate the numbers and probabilities
+        self.validate_numbers()
+        self.validate_probabilities()
 
         # Check if the numbers and probabilities' lists have the same length
         if len(self.numbers) != len(self.probabilities):
-            raise RandomGenLengthError()
+            raise RandomGenMismatchError()
 
-        # Check if the probabilities sum to 1
-        if round(sum(self.probabilities), 3) != 1:
-            raise RandomGenSumError()
-
-        # Check if the probabilities are non-negative
-        if any(probability < 0 for probability in self.probabilities):
-            raise RandomGenNegativeError()
+        # After the validation calculate the cumulative probabilities
+        self.calc_cdf()
 
         return self
 
     def next_num(self):
         # Use random.choices to select a number based on the probabilities
         return random.choices(self.numbers, self.probabilities, k=1)[0]
+
+    def generate(self, amount):
+        return [self.next_num() for _ in range(amount)]
