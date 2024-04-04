@@ -10,6 +10,38 @@ app.bins = [-1, 0, 1, 2, 3]
 app.probabilities = [0.01, 0.3, 0.58, 0.1, 0.01]
 app.max_numbers = 10000
 
+@app.errorhandler(RandomGenError)
+def handle_error(e):
+    return jsonify({'error': str(e)}), 400
+
+def handle_randomgen_request(randomgen, amount):
+
+    if amount > app.max_numbers:
+        return jsonify({'error': 'Amount of numbers cannot exceed 1000'})
+
+    random_numbers = [randomgen.next_num() for _ in range(amount)]
+
+    hypothesis = (
+        ChiSquareTest()
+        .set_numbers(random_numbers)
+        .set_probabilities(app.probabilities)
+        .calculate()
+    )
+
+    response = OrderedDict(
+        {
+        'version': 1,
+        'distribution': app.probabilities,
+        'is_fair': int(hypothesis.test()),
+        'chi_square': hypothesis.chi_square,
+        'p_value': hypothesis.p_value,
+        'df': hypothesis.df,
+        'numbers': random_numbers,
+        }
+    )
+
+    return jsonify(response)
+
 
 # A simple route that returns a string
 @app.get('/')
@@ -56,41 +88,14 @@ def api_v1_generate_numbers():
     amount = request.args.get('numbers', default=1, type=int)
 
     # Generate random numbers from -1 to 3 using a custom distribution
-    random_number = (
+    rg = (
         RandomGenV1()
         .set_bins(app.bins)
         .set_probabilities(app.probabilities)
         .validate()
     )
 
-    if amount > app.max_numbers:
-        return jsonify({'error': 'Amount of numbers cannot exceed 1000'})
-
-    # Generate the random numbers
-    random_numbers = [random_number.next_num() for _ in range(amount)]
-
-    # Create the hypothesis test object
-    hypothesis = (
-        ChiSquareTest()
-        .set_numbers(random_numbers)
-        .set_probabilities(app.probabilities)
-        .calculate()
-    )
-
-    # Return the random numbers as JSON
-    response = OrderedDict(
-        {
-        'version': 1,
-        'distribution': app.probabilities,
-        'is_fair': int(hypothesis.test()),
-        'chi_square': hypothesis.chi_square,
-        'p_value': hypothesis.p_value,
-        'df': hypothesis.df,
-        'numbers': random_numbers,
-        }
-    )
-
-    return jsonify(response)
+    return handle_randomgen_request(rg, amount)
 
 
 @app.get('/api/v2/randomgen')
@@ -102,41 +107,14 @@ def api_v2_generate_numbers():
     amount = request.args.get('numbers', default=1, type=int)
 
     # Create the random number generator object
-    random_number = (
+    rg = (
         RandomGenV1()
         .set_bins(app.bins)
         .set_probabilities(app.probabilities)
         .validate()
     )
 
-    if amount > app.max_numbers:
-        return jsonify({'error': 'Amount of numbers cannot exceed {app.max_amount}'})
-
-    # Generate the random numbers
-    random_numbers = [random_number.next_num() for _ in range(amount)]
-
-    # Create the hypothesis test object
-    hypothesis = (
-        ChiSquareTest()
-        .set_numbers(random_numbers)
-        .set_probabilities(app.probabilities)
-        .calculate()
-    )
-
-    # Return the random numbers as JSON
-    response = OrderedDict(
-        {
-        'version': 1,
-        'distribution': app.probabilities,
-        'is_fair': int(hypothesis.test()),
-        'chi_square': hypothesis.chi_square,
-        'p_value': hypothesis.p_value,
-        'df': hypothesis.df,
-        'numbers': random_numbers,
-        }
-    )
-
-    return jsonify(response)
+    return handle_randomgen_request(rg, amount)
 
 if __name__ == '__main__':
     app.run(debug=True)
