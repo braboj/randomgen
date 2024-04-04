@@ -30,12 +30,3 @@ class RandomGenNegativeError(RandomGeneratorError):
 
     def __init__(self):
         super().__init__(message=self.MESSAGE)
-
-
-class RandomGeneratorHypothesisError(RandomGeneratorError):
-
-    MESSAGE = ("The hypothesis is not valid, the data doesn't "
-               "match the expected distribution.")
-
-    def __init__(self):
-        super().__init__(message=self.MESSAGE)
