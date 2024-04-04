@@ -7,8 +7,20 @@ from abc import ABCMeta, abstractmethod
 class HypothesisTest(metaclass=ABCMeta):
 
     @abstractmethod
+    def set_numbers(self, numbers):
+        raise NotImplementedError
+
+    @abstractmethod
+    def set_probabilities(self, probabilities):
+        raise NotImplementedError
+
+    @abstractmethod
+    def calculate(self):
+        raise NotImplementedError
+
+    @abstractmethod
     def test(self, alpha=0.05):
-        pass
+        raise NotImplementedError
 
 
 class ChiSquareTest(HypothesisTest):
