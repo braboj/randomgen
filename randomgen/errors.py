@@ -1,3 +1,5 @@
+from randomgen.defines import SIZE_LIMIT
+
 class RandomGeneratorError(Exception):
 
     def __init__(self, message):
@@ -7,8 +9,28 @@ class RandomGeneratorError(Exception):
     def set_message(cls, message):
         cls.message = message
 
+class RandomGenTypeError(RandomGeneratorError):
 
-class RandomGenLengthError(RandomGeneratorError):
+        MESSAGE = "The numbers and probabilities must be a list of numbers."
+
+        def __init__(self):
+            super().__init__(message=self.MESSAGE)
+
+class RandomGenEmptyError(RandomGeneratorError):
+
+    MESSAGE = "The numbers and probabilities lists must not be empty."
+
+    def __init__(self):
+        super().__init__(message=self.MESSAGE)
+
+class RandomGenOutOfBoundsError(RandomGeneratorError):
+
+    MESSAGE = f"The numbers must not exceed {SIZE_LIMIT}"
+
+    def __init__(self):
+        super().__init__(message=self.MESSAGE)
+
+class RandomGenMismatchError(RandomGeneratorError):
 
     MESSAGE = "The numbers and probabilities lists must have the same length."
 
