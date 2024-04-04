@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from randomgen.core import RandomGenV1, RandomGenV2
 from randomgen.hypothesis import ChiSquareTest
 from collections import OrderedDict
+from randomgen.errors import RandomGenError
 
 app = Flask(__name__)
 app.numbers = [-1, 0, 1, 2, 3]
@@ -48,6 +49,7 @@ def api_config():
 def api_v1_generate_numbers():
 
     # Query: /api/v1/randomgen?amount=10
+    response = {}
 
     # Parse the query parameter amount
     amount = request.args.get('number', default=1, type=int)

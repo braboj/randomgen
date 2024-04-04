@@ -292,7 +292,11 @@ backend is around 50 msec, bearing in mind that the REST API is going to stack o
 some latency.
 
 
-### . Implement automated integration tests for the REST API
+### 11. Implement automated integration tests for the REST API
+
+The integration tests showed that we need to wrap the exceptions by the backend and return a 
+well-defined HTTP status code. Maybe it is good to implement a simple health check endpoint to check
+the status of the API.
 
 ### . Prepare the project distribution
 
