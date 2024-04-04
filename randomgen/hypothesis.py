@@ -53,7 +53,7 @@ class ChiSquareTest(HypothesisTest):
         self.probabilities = probabilities
         return self
 
-    def calc_chi(self):
+    def calculate(self):
 
         # Calculate the frequency of each number
         self.counter = Counter(self.random_numbers)
@@ -98,13 +98,11 @@ class ChiSquareTest(HypothesisTest):
 
         self.df = len(self.counter) - 1
 
-        # Return the object to allow for method chaining
-        return self
-
-    def calc_p(self):
         # Calculate the p-value that corresponds to the chi-square value
         self.p_value = 1 - chi2.cdf(self.chi_square, self.df)
+
         return self
+
 
     def test(self, alpha=0.05):
         """ Test the distribution of random numbers against the given
@@ -134,8 +132,7 @@ if __name__ == "__main__":
         ChiSquareTest()
         .set_numbers(nums)
         .set_probabilities(probs)
-        .calc_chi()
-        .calc_p()
+        .calculate()
         .test()
     )
 
@@ -149,8 +146,7 @@ if __name__ == "__main__":
         ChiSquareTest()
         .set_numbers(nums)
         .set_probabilities(probs)
-        .calc_chi()
-        .calc_p()
+        .calculate()
         .test()
     )
 
