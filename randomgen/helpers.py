@@ -3,8 +3,7 @@ import matplotlib.pyplot as plt
 
 
 class Histogram(object):
-    """ This class shall take a tuple of random numbers and calculate the
-    frequency of each number and the probability of each number """
+    """ Helper class to build a histogram from a list of numbers """
 
     def __init__(self):
         self.random_numbers = ()
@@ -16,7 +15,7 @@ class Histogram(object):
         msg = str(self.histogram)
         return msg
 
-    def set_random_numbers(self, numbers):
+    def set_numbers(self, numbers):
         self.random_numbers = numbers
         return self
 
@@ -52,7 +51,7 @@ if __name__ == "__main__":
     # Create a histogram object
     hist = (
         Histogram()
-        .set_random_numbers(random_numbers)
+        .set_numbers(random_numbers)
         .build()
         .plot()
     )
