@@ -6,8 +6,9 @@ from collections import OrderedDict
 from randomgen.errors import RandomGenError
 
 app = Flask(__name__)
-app.numbers = [-1, 0, 1, 2, 3]
+app.bins = [-1, 0, 1, 2, 3]
 app.probabilities = [0.01, 0.3, 0.58, 0.1, 0.01]
+app.max_numbers = 10000
 
 
 # A simple route that returns a string
@@ -28,8 +29,8 @@ def hello_world():
         <p>Endpoints:</p>
         
         <ul>
-            <li> /api/v1/randomgen?number=1000 </li>
-            <li> /api/v2/randomgen?number=1000 </li>
+            <li> /api/v1/randomgen?numbers=1000 </li>
+            <li> /api/v2/randomgen?numbers=1000 </li>
         </ul>
     
         """
@@ -39,10 +40,10 @@ def hello_world():
 
 @app.post('/api/config')
 def api_config():
-    app.numbers = request.json['numbers']
+    app.bins = request.json['bins']
     app.probabilities = request.json['probabilities']
 
-    return jsonify({'numbers': app.numbers, 'probabilities': app.probabilities})
+    return jsonify({'bins': app.bins, 'probabilities': app.probabilities})
 
 
 @app.get('/api/v1/randomgen')
@@ -52,15 +53,18 @@ def api_v1_generate_numbers():
     response = {}
 
     # Parse the query parameter amount
-    amount = request.args.get('number', default=1, type=int)
+    amount = request.args.get('numbers', default=1, type=int)
 
     # Generate random numbers from -1 to 3 using a custom distribution
     random_number = (
         RandomGenV1()
-        .set_numbers(app.numbers)
+        .set_bins(app.bins)
         .set_probabilities(app.probabilities)
         .validate()
     )
+
+    if amount > app.max_numbers:
+        return jsonify({'error': 'Amount of numbers cannot exceed 1000'})
 
     # Generate the random numbers
     random_numbers = [random_number.next_num() for _ in range(amount)]
@@ -95,15 +99,18 @@ def api_v2_generate_numbers():
     # Query: /api/v1/randomgen?amount=10
 
     # Parse the query parameter amount
-    amount = request.args.get('number', default=1, type=int)
+    amount = request.args.get('numbers', default=1, type=int)
 
-    # Generate random numbers from -1 to 3 using a custom distribution
+    # Create the random number generator object
     random_number = (
         RandomGenV1()
-        .set_numbers(app.numbers)
+        .set_bins(app.bins)
         .set_probabilities(app.probabilities)
         .validate()
     )
+
+    if amount > app.max_numbers:
+        return jsonify({'error': 'Amount of numbers cannot exceed {app.max_amount}'})
 
     # Generate the random numbers
     random_numbers = [random_number.next_num() for _ in range(amount)]

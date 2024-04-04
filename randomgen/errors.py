@@ -1,5 +1,3 @@
-from randomgen.defines import SIZE_LIMIT
-
 class RandomGenError(Exception):
 
     def __init__(self, message):
@@ -19,13 +17,6 @@ class RandomGenTypeError(RandomGenError):
 class RandomGenEmptyError(RandomGenError):
 
     MESSAGE = "The numbers and probabilities lists must not be empty."
-
-    def __init__(self):
-        super().__init__(message=self.MESSAGE)
-
-class RandomGenOutOfBoundsError(RandomGenError):
-
-    MESSAGE = f"The numbers must not exceed {SIZE_LIMIT}"
 
     def __init__(self):
         super().__init__(message=self.MESSAGE)

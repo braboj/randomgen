@@ -22,7 +22,7 @@ def main(randomgen):
     # Example usage using a fluent interface
     rg = (
         randomgen()
-        .set_numbers(nums)
+        .set_bins(nums)
         .set_probabilities(prob)
         .validate()
     )

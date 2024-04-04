@@ -3,10 +3,7 @@ from randomgen.errors import (
     RandomGenSumError,
     RandomGenEmptyError,
     RandomGenTypeError,
-    RandomGenOutOfBoundsError
 )
-
-from randomgen.defines import SIZE_LIMIT
 
 import random
 from abc import ABCMeta, abstractmethod
@@ -15,19 +12,19 @@ from abc import ABCMeta, abstractmethod
 class RandomGenABC(metaclass=ABCMeta):
 
     def __init__(self):
-        self.numbers = ()
+        self.bins = ()
         self.probabilities = ()
         self.cumulative_probabilities = []
 
     def __str__(self):
-        return f"Numbers: {self.numbers}, Probabilities: {self.probabilities}"
+        return f"Numbers: {self.bins}, Probabilities: {self.probabilities}"
 
     @abstractmethod
-    def set_numbers(self, numbers):
+    def set_bins(self, numbers):
         pass
 
     @abstractmethod
-    def validate_numbers(self):
+    def validate_bins(self):
         pass
 
     @abstractmethod
@@ -58,34 +55,30 @@ class RandomGenABC(metaclass=ABCMeta):
 class RandomGenV1(RandomGenABC):
 
 
-    def set_numbers(self, numbers):
-        self.numbers = numbers
+    def set_bins(self, numbers):
+        self.bins = numbers
         return self
 
-    def validate_numbers(self):
+    def validate_bins(self):
 
         # Check if the numbers is None
-        if self.numbers is None:
+        if self.bins is None:
             raise RandomGenTypeError()
 
         # Check if the numbers are iterable
-        elif not hasattr(self.numbers, '__iter__'):
+        elif not hasattr(self.bins, '__iter__'):
             raise RandomGenTypeError()
 
-        # Check if the numbers list is too large
-        elif len(self.numbers) > SIZE_LIMIT:
-            raise RandomGenOutOfBoundsError()
-
         # Check if dictionary
-        elif isinstance(self.numbers, dict):
+        elif isinstance(self.bins, dict):
             raise RandomGenTypeError()
 
         # Check if the any member is not a number
-        elif not all(isinstance(num, (int, float)) for num in self.numbers):
+        elif not all(isinstance(num, (int, float)) for num in self.bins):
             raise RandomGenTypeError()
 
         # Check if the numbers list is empty
-        elif not self.numbers:
+        elif not self.bins:
             raise RandomGenEmptyError()
 
         return self
@@ -103,10 +96,6 @@ class RandomGenV1(RandomGenABC):
         # Check if the numbers are iterable
         elif not hasattr(self.probabilities, '__iter__'):
             raise RandomGenTypeError()
-
-        # Check if the numbers list is too large
-        elif len(self.probabilities) > SIZE_LIMIT:
-            raise RandomGenOutOfBoundsError()
 
         # Check if empty
         elif not self.probabilities:
@@ -143,11 +132,11 @@ class RandomGenV1(RandomGenABC):
 
     def validate(self):
 
-        self.validate_numbers()
+        self.validate_bins()
         self.validate_probabilities()
 
         # Check if the numbers and probabilities' lists have the same length
-        if len(self.numbers) != len(self.probabilities):
+        if len(self.bins) != len(self.probabilities):
             raise RandomGenMismatchError()
 
         # After the validation calculate the cumulative probabilities
@@ -159,7 +148,7 @@ class RandomGenV1(RandomGenABC):
         rand = random.random()
         for i, cum_prob in enumerate(self.cumulative_probabilities):
             if rand <= cum_prob:
-                return self.numbers[i]
+                return self.bins[i]
 
     def generate(self, amount):
         return [self.next_num() for _ in range(amount)]
@@ -167,34 +156,30 @@ class RandomGenV1(RandomGenABC):
 
 class RandomGenV2(RandomGenABC):
 
-    def set_numbers(self, numbers):
-        self.numbers = numbers
+    def set_bins(self, numbers):
+        self.bins = numbers
         return self
 
-    def validate_numbers(self):
+    def validate_bins(self):
 
         # Check if the numbers is None
-        if self.numbers is None:
+        if self.bins is None:
             raise RandomGenTypeError()
 
         # Check if the numbers are iterable
-        elif not hasattr(self.numbers, '__iter__'):
+        elif not hasattr(self.bins, '__iter__'):
             raise RandomGenTypeError()
 
-        # Check if the numbers list is too large
-        elif len(self.numbers) > SIZE_LIMIT:
-            raise RandomGenOutOfBoundsError()
-
         # Check if dictionary
-        elif isinstance(self.numbers, dict):
+        elif isinstance(self.bins, dict):
             raise RandomGenTypeError()
 
         # Check if the numbers list is not a list of numbers
-        elif not all(isinstance(num, (int, float)) for num in self.numbers):
+        elif not all(isinstance(num, (int, float)) for num in self.bins):
             raise RandomGenTypeError()
 
         # Check if the numbers list is empty
-        elif not self.numbers:
+        elif not self.bins:
             raise RandomGenEmptyError()
 
         return self
@@ -216,10 +201,6 @@ class RandomGenV2(RandomGenABC):
         # Check if the probabilities are iterable
         elif not hasattr(self.probabilities, '__iter__'):
             raise RandomGenTypeError()
-
-        # Check if the numbers list is too large
-        elif len(self.probabilities) > SIZE_LIMIT:
-            raise RandomGenOutOfBoundsError()
 
         # Check if set
         elif isinstance(self.probabilities, set):
@@ -253,11 +234,11 @@ class RandomGenV2(RandomGenABC):
     def validate(self):
 
         # Validate the numbers and probabilities
-        self.validate_numbers()
+        self.validate_bins()
         self.validate_probabilities()
 
         # Check if the numbers and probabilities' lists have the same length
-        if len(self.numbers) != len(self.probabilities):
+        if len(self.bins) != len(self.probabilities):
             raise RandomGenMismatchError()
 
         # After the validation calculate the cumulative probabilities
@@ -267,7 +248,7 @@ class RandomGenV2(RandomGenABC):
 
     def next_num(self):
         # Use random.choices to select a number based on the probabilities
-        return random.choices(self.numbers, self.probabilities, k=1)[0]
+        return random.choices(self.bins, self.probabilities, k=1)[0]
 
     def generate(self, amount):
         return [self.next_num() for _ in range(amount)]

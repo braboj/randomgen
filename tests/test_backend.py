@@ -4,7 +4,6 @@ import pytest
 from randomgen.core import RandomGenV1, RandomGenV2
 from randomgen.hypothesis import ChiSquareTest
 from randomgen.errors import *
-from randomgen.defines import SIZE_LIMIT
 
 versions = [RandomGenV1, RandomGenV2]
 
@@ -18,87 +17,82 @@ def randomgen(request):
 ####################################################################################################
 
 @pytest.mark.parametrize("randomgen", versions, indirect=True)
-class Test_RG_NUMNBERS(object):
+class Test_RG_BINS(object):
 
     def test_NONE(self, randomgen):
         with pytest.raises(RandomGenTypeError):
-            randomgen.set_numbers(None)
+            randomgen.set_bins(None)
             randomgen.validate()
 
     def test_EMPTY(self, randomgen):
         with pytest.raises(RandomGenEmptyError):
-            randomgen.set_numbers([])
-            randomgen.validate_numbers()
+            randomgen.set_bins([])
+            randomgen.validate_bins()
 
     def test_INT(self, randomgen):
         with pytest.raises(RandomGenTypeError):
-            randomgen.set_numbers(123)
-            randomgen.validate_numbers()
+            randomgen.set_bins(123)
+            randomgen.validate_bins()
 
     def test_INT_LIST(self, randomgen):
-        randomgen.set_numbers([-1, 0, 1, 2, 3])
-        randomgen.validate_numbers()
-        assert randomgen.numbers == [-1, 0, 1, 2, 3]
+        randomgen.set_bins([-1, 0, 1, 2, 3])
+        randomgen.validate_bins()
+        assert randomgen.bins == [-1, 0, 1, 2, 3]
 
     def test_INT_TUPLE(self, randomgen):
-        randomgen.set_numbers((-1, 0, 1, 2, 3))
-        randomgen.validate_numbers()
-        assert randomgen.numbers == (-1, 0, 1, 2, 3)
+        randomgen.set_bins((-1, 0, 1, 2, 3))
+        randomgen.validate_bins()
+        assert randomgen.bins == (-1, 0, 1, 2, 3)
 
     def test_INT_SET(self, randomgen):
-        randomgen.set_numbers({-1, 0, 1, 2, 3})
-        randomgen.validate_numbers()
-        assert randomgen.numbers == {-1, 0, 1, 2, 3}
+        randomgen.set_bins({-1, 0, 1, 2, 3})
+        randomgen.validate_bins()
+        assert randomgen.bins == {-1, 0, 1, 2, 3}
 
     def test_FLOAT(self, randomgen):
         with pytest.raises(RandomGenTypeError):
-            randomgen.set_numbers(123.45)
-            randomgen.validate_numbers()
+            randomgen.set_bins(123.45)
+            randomgen.validate_bins()
 
     def test_FLOAT_LIST(self, randomgen):
-        randomgen.set_numbers([-1.0, 0.0, 1.0, 2.0, 3.0])
-        randomgen.validate_numbers()
-        assert randomgen.numbers == [-1.0, 0.0, 1.0, 2.0, 3.0]
+        randomgen.set_bins([-1.0, 0.0, 1.0, 2.0, 3.0])
+        randomgen.validate_bins()
+        assert randomgen.bins == [-1.0, 0.0, 1.0, 2.0, 3.0]
 
     def test_FLOAT_TUPLE(self, randomgen):
-        randomgen.set_numbers((-1.0, 0.0, 1.0, 2.0, 3.0))
-        randomgen.validate_numbers()
-        assert randomgen.numbers == (-1.0, 0.0, 1.0, 2.0, 3.0)
+        randomgen.set_bins((-1.0, 0.0, 1.0, 2.0, 3.0))
+        randomgen.validate_bins()
+        assert randomgen.bins == (-1.0, 0.0, 1.0, 2.0, 3.0)
 
     def test_FLOAT_SET(self, randomgen):
-        randomgen.set_numbers({-1.0, 0.0, 1.0, 2.0, 3.0})
-        randomgen.validate_numbers()
-        assert randomgen.numbers == {-1.0, 0.0, 1.0, 2.0, 3.0}
+        randomgen.set_bins({-1.0, 0.0, 1.0, 2.0, 3.0})
+        randomgen.validate_bins()
+        assert randomgen.bins == {-1.0, 0.0, 1.0, 2.0, 3.0}
 
     def test_STRING(self, randomgen):
         with pytest.raises(RandomGenTypeError):
-            randomgen.set_numbers("123")
-            randomgen.validate_numbers()
+            randomgen.set_bins("123")
+            randomgen.validate_bins()
 
     def test_STRING_LIST(self, randomgen):
         with pytest.raises(RandomGenTypeError):
-            randomgen.set_numbers(["-1", "0", "1", "2", "3"])
-            randomgen.validate_numbers()
+            randomgen.set_bins(["-1", "0", "1", "2", "3"])
+            randomgen.validate_bins()
 
     def test_DICT(self, randomgen):
         with pytest.raises(RandomGenTypeError):
-            randomgen.set_numbers({-1: 1, 0: 1, 1: 1, 2: 1, 3: 1})
-            randomgen.validate_numbers()
+            randomgen.set_bins({-1: 1, 0: 1, 1: 1, 2: 1, 3: 1})
+            randomgen.validate_bins()
 
     def test_MIXED_TYPES(self, randomgen):
         with pytest.raises(RandomGenTypeError):
-            randomgen.set_numbers([-1, 0.0, "1", 2.0, 3])
-            randomgen.validate_numbers()
+            randomgen.set_bins([-1, 0.0, "1", 2.0, 3])
+            randomgen.validate_bins()
 
     def test_MIXED_NUMBERS(self, randomgen):
-        randomgen.set_numbers([-1, 0, 1, 2.0, 3])
-        randomgen.validate_numbers()
-        assert randomgen.numbers == [-1, 0, 1, 2.0, 3]
-
-    def test_OUT_OF_BOUNDS(self, randomgen):
-        with pytest.raises(RandomGenOutOfBoundsError):
-            randomgen.set_numbers([1] * (SIZE_LIMIT + 1))
-            randomgen.validate_numbers()
+        randomgen.set_bins([-1, 0, 1, 2.0, 3])
+        randomgen.validate_bins()
+        assert randomgen.bins == [-1, 0, 1, 2.0, 3]
 
 ####################################################################################################
 
@@ -187,7 +181,7 @@ class Test_RG_PROBABILITIES(object):
 
     def test_SIZE_MISMATCH(self, randomgen):
         with pytest.raises(RandomGenMismatchError):
-            randomgen.set_numbers([1, 2, 3, 4, 5])
+            randomgen.set_bins([1, 2, 3, 4, 5])
             randomgen.set_probabilities([0.1, 0.2, 0.3, 0.4])
             randomgen.validate()
 
@@ -211,11 +205,6 @@ class Test_RG_PROBABILITIES(object):
             randomgen.set_probabilities([0.2, 0.2, 0.2, 0.2, 0.1])
             randomgen.validate()
 
-    def test_OUT_OF_BOUNDS(self, randomgen):
-        with pytest.raises(RandomGenOutOfBoundsError):
-            randomgen.set_probabilities([1] * (SIZE_LIMIT + 1))
-            randomgen.validate_probabilities()
-
 ####################################################################################################
 
 @pytest.mark.parametrize("randomgen", versions, indirect=True)
@@ -226,12 +215,12 @@ class Test_RG_DISTRIBUTION(object):
         uniform_probabilities = [0.2, 0.2, 0.2, 0.2, 0.2]
 
         # Prepare the random generator
-        randomgen.set_numbers([1, 2, 3, 4, 5])
+        randomgen.set_bins([1, 2, 3, 4, 5])
         randomgen.set_probabilities(uniform_probabilities)
         randomgen.validate()
 
         # Generate the maximum number of random numbers
-        random_numbers = randomgen.generate(amount=SIZE_LIMIT)
+        random_numbers = randomgen.generate(amount=1000)
 
         # Perform the Chi-Square test
         hypothesis = (
@@ -249,12 +238,12 @@ class Test_RG_DISTRIBUTION(object):
         binimoal_probabilities = [0.0625, 0.25, 0.375, 0.25, 0.0625]
 
         # Prepare the random generator
-        randomgen.set_numbers([1, 2, 3, 4, 5])
+        randomgen.set_bins([1, 2, 3, 4, 5])
         randomgen.set_probabilities(binimoal_probabilities)
         randomgen.validate()
 
         # Generate the maximum number of random numbers
-        random_numbers = randomgen.generate(amount=SIZE_LIMIT)
+        random_numbers = randomgen.generate(amount=1000)
 
         # Perform the Chi-Square test
         hypothesis = (
@@ -273,12 +262,12 @@ class Test_RG_DISTRIBUTION(object):
         custom_probabilities = [0.01, 0.3, 0.58, 0.1, 0.01]
 
         # Prepare the random generator
-        randomgen.set_numbers([1, 2, 3, 4, 5])
+        randomgen.set_bins([1, 2, 3, 4, 5])
         randomgen.set_probabilities(custom_probabilities)
         randomgen.validate()
 
         # Generate the maximum number of random numbers
-        random_numbers = randomgen.generate(amount=SIZE_LIMIT)
+        random_numbers = randomgen.generate(amount=1000)
 
         # Perform the Chi-Square test
         hypothesis = (
@@ -298,7 +287,7 @@ class Test_RG_PERFORMANCE(object):
     def test_TIME(self, randomgen):
 
         # Prepare the random generator
-        randomgen.set_numbers([1, 2, 3, 4, 5])
+        randomgen.set_bins([1, 2, 3, 4, 5])
         randomgen.set_probabilities([0.2, 0.2, 0.2, 0.2, 0.2])
         randomgen.validate()
 
@@ -307,7 +296,7 @@ class Test_RG_PERFORMANCE(object):
         timestamp_1 = time.time_ns()
 
         # Generate the maximum number of random numbers
-        randomgen.generate(amount=SIZE_LIMIT)
+        randomgen.generate(amount=1000)
 
         # Stop measuring the time
         timestamp_2 = time.time_ns()

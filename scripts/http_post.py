@@ -5,7 +5,7 @@ url = 'http://127.0.0.1:5000/api/config'
 
 # Sample data
 data = {
-    'numbers': [1, 2, 3, 3, 3],  # Sample numbers
+    'bins': [1, 2, 3, 3, 3],  # Sample numbers
     'probabilities': [0.2, 0.2, 0.6]  # Corresponding probabilities
 }
 

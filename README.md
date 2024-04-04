@@ -225,7 +225,7 @@ from randomgen.core import RandomGenV1
 # Create a random number generator
 rg = (
     RandomGenV1()
-    .set_random_nums([-1, 0, 1, 2, 3])
+    .set_bins([-1, 0, 1, 2, 3])
     .set_probabilities([0.01, 0.3, 0.58, 0.1, 0.01])
     .validate()
 )
