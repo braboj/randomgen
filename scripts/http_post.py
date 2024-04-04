@@ -1,7 +1,7 @@
 import requests
 
 # Endpoint URL
-url = 'http://127.0.0.1:5000/api/check-probabilities'
+url = 'http://127.0.0.1:5000/api/config'
 
 # Sample data
 data = {
@@ -17,7 +17,3 @@ if response.status_code == 200:
     print("Response from server:", response.json())
 else:
     print("Error:", response.status_code)
-
-
-# Raw request
-# curl -X POST http://127.0.0.1:5000/api/check-probabilities -H "Content-Type: application/json" -d '{"numbers": [1, 2, 3, 3, 3], "probabilities": [0.2, 0.2, 0.6]}'
