@@ -1,6 +1,6 @@
 from randomgen.defines import SIZE_LIMIT
 
-class RandomGeneratorError(Exception):
+class RandomGenError(Exception):
 
     def __init__(self, message):
         super().__init__(message)
@@ -9,28 +9,28 @@ class RandomGeneratorError(Exception):
     def set_message(cls, message):
         cls.message = message
 
-class RandomGenTypeError(RandomGeneratorError):
+class RandomGenTypeError(RandomGenError):
 
         MESSAGE = "The numbers and probabilities must be a list of numbers."
 
         def __init__(self):
             super().__init__(message=self.MESSAGE)
 
-class RandomGenEmptyError(RandomGeneratorError):
+class RandomGenEmptyError(RandomGenError):
 
     MESSAGE = "The numbers and probabilities lists must not be empty."
 
     def __init__(self):
         super().__init__(message=self.MESSAGE)
 
-class RandomGenOutOfBoundsError(RandomGeneratorError):
+class RandomGenOutOfBoundsError(RandomGenError):
 
     MESSAGE = f"The numbers must not exceed {SIZE_LIMIT}"
 
     def __init__(self):
         super().__init__(message=self.MESSAGE)
 
-class RandomGenMismatchError(RandomGeneratorError):
+class RandomGenMismatchError(RandomGenError):
 
     MESSAGE = "The numbers and probabilities lists must have the same length."
 
@@ -38,7 +38,7 @@ class RandomGenMismatchError(RandomGeneratorError):
         super().__init__(message=self.MESSAGE)
 
 
-class RandomGenSumError(RandomGeneratorError):
+class RandomGenSumError(RandomGenError):
 
     MESSAGE = "Probabilities must sum to 1."
 
@@ -46,18 +46,9 @@ class RandomGenSumError(RandomGeneratorError):
         super().__init__(message=self.MESSAGE)
 
 
-class RandomGenNegativeError(RandomGeneratorError):
+class RandomGenNegativeError(RandomGenError):
 
     MESSAGE = "Probabilities must be non-negative."
-
-    def __init__(self):
-        super().__init__(message=self.MESSAGE)
-
-
-class RandomGeneratorHypothesisError(RandomGeneratorError):
-
-    MESSAGE = ("The hypothesis is not valid, the data doesn't "
-               "match the expected distribution.")
 
     def __init__(self):
         super().__init__(message=self.MESSAGE)
