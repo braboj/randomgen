@@ -10,12 +10,12 @@ class Histogram(dict):
         self.counter = 0
         self.total = 0
 
-    def set_numbers(self, numbers):
-        self.random_numbers = numbers
-        return self
-
     def from_dict(self, histogram):
         self.update(histogram)
+        return self
+
+    def set_numbers(self, numbers):
+        self.random_numbers = numbers
         return self
 
     def calc(self):

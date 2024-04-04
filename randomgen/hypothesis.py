@@ -65,7 +65,6 @@ class ChiSquareTest(HypothesisTestAbc):
         return self
 
     def calc(self):
-
         # Calculate the frequency of each number
         self.counter = Counter(self.random_numbers)
 
@@ -114,7 +113,7 @@ class ChiSquareTest(HypothesisTestAbc):
 
         return self
 
-    def test(self, alpha=0.05):
+    def test(self, alpha = 0.05):
         """ Perform the chi-square test for the given significance level
 
         It tells us how likely it is that the null hypothesis is true. The
@@ -129,13 +128,16 @@ class ChiSquareTest(HypothesisTestAbc):
 
         """
 
-        return self.p_value > alpha
+        # Scipy/Numpy hijacks bool somehow, and it becomes a bool_ object.
+        # Unfortunately, this causes some problems when comparing the result
+        # using the is operator (e.g bool(0.05) is False).
+
+        return bool(self.p_value > alpha)
 
 
 if __name__ == "__main__":
-
     # Generate random numbers from -1 to 3 in a uniform distribution
-    nums = [random.randint(-1, 3) for _ in range(1000)]
+    nums = [random.randint(-1, 3) for _ in range(10000)]
     probs = [0.2, 0.2, 0.2, 0.2, 0.2]
 
     # Create the chi-square test object for a uniform distribution
