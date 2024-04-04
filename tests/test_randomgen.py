@@ -223,7 +223,7 @@ class TestRandomGenDistribution(object):
         randomgen.validate()
 
         # Generate the maximum number of random numbers
-        random_numbers = randomgen.generate(amount=1000)
+        random_numbers = [randomgen.next_num() for _ in range(1000)]
 
         # Perform the Chi-Square test
         hypothesis = (
@@ -233,7 +233,7 @@ class TestRandomGenDistribution(object):
         )
 
         # Test if the hypothesis is valid
-        assert hypothesis.test() is True
+        assert  hypothesis.test() is True
 
     def test_fit_binomial(self, randomgen):
         binomial_probabilities = [0.0625, 0.25, 0.375, 0.25, 0.0625]
@@ -244,7 +244,7 @@ class TestRandomGenDistribution(object):
         randomgen.validate()
 
         # Generate the maximum number of random numbers
-        random_numbers = randomgen.generate(amount=1000)
+        random_numbers = [randomgen.next_num() for _ in range(1000)]
 
         # Perform the Chi-Square test
         hypothesis = (
@@ -265,7 +265,7 @@ class TestRandomGenDistribution(object):
         randomgen.validate()
 
         # Generate the maximum number of random numbers
-        random_numbers = randomgen.generate(amount=1000)
+        random_numbers = [randomgen.next_num() for _ in range(1000)]
 
         # Perform the Chi-Square test
         hypothesis = (
