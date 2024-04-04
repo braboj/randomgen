@@ -7,15 +7,15 @@ from abc import ABCMeta, abstractmethod
 class HypothesisTestAbc(metaclass=ABCMeta):
 
     @abstractmethod
-    def set_numbers(self, numbers):
+    def set_observed_numbers(self, numbers):
         raise NotImplementedError
 
     @abstractmethod
-    def set_probabilities(self, probabilities):
+    def set_expected_probabilities(self, probabilities):
         raise NotImplementedError
 
     @abstractmethod
-    def calculate(self):
+    def calc(self):
         raise NotImplementedError
 
     @abstractmethod
@@ -26,7 +26,6 @@ class HypothesisTestAbc(metaclass=ABCMeta):
 class ChiSquareTest(HypothesisTestAbc):
 
     def __init__(self):
-
         # Counter for the random numbers
         self.counter = None
 
@@ -57,15 +56,15 @@ class ChiSquareTest(HypothesisTestAbc):
 
         return message
 
-    def set_numbers(self, numbers):
+    def set_observed_numbers(self, numbers):
         self.random_numbers = numbers
         return self
 
-    def set_probabilities(self, probabilities):
+    def set_expected_probabilities(self, probabilities):
         self.probabilities = probabilities
         return self
 
-    def calculate(self):
+    def calc(self):
 
         # Calculate the frequency of each number
         self.counter = Counter(self.random_numbers)
@@ -115,11 +114,12 @@ class ChiSquareTest(HypothesisTestAbc):
 
         return self
 
-
     def test(self, alpha=0.05):
-        """ Test the distribution of random numbers against the given
+        """ Perform the chi-square test for the given significance level
 
-        Probabilities using the chi-square test
+        It tells us how likely it is that the null hypothesis is true. The
+        null hypothesis is that the observed distribution is the same as the
+        expected distribution.
 
         Args:
             alpha (float): Significance level
@@ -142,9 +142,9 @@ if __name__ == "__main__":
     # The result should be True
     hypothesis = (
         ChiSquareTest()
-        .set_numbers(nums)
-        .set_probabilities(probs)
-        .calculate()
+        .set_observed_numbers(nums)
+        .set_expected_probabilities(probs)
+        .calc()
         .test()
     )
 
@@ -156,9 +156,9 @@ if __name__ == "__main__":
 
     hypothesis = (
         ChiSquareTest()
-        .set_numbers(nums)
-        .set_probabilities(probs)
-        .calculate()
+        .set_observed_numbers(nums)
+        .set_expected_probabilities(probs)
+        .calc()
         .test()
     )
 

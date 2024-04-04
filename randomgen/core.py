@@ -74,7 +74,8 @@ class RandomGenABC(metaclass=ABCMeta):
             raise RandomGenTypeError()
 
         # Check if the any member is not a number
-        elif not all(isinstance(prob, (int, float)) for prob in self.probabilities):
+        elif not all(
+                isinstance(prob, (int, float)) for prob in self.probabilities):
             raise RandomGenTypeError()
 
         # Check if the probabilities are non-negative
@@ -115,6 +116,7 @@ class RandomGenABC(metaclass=ABCMeta):
     def next_num(self):
         pass
 
+
 class RandomGenV1(RandomGenABC):
 
     def next_num(self):
@@ -123,6 +125,7 @@ class RandomGenV1(RandomGenABC):
             if rand <= cum_prob:
                 return self.bins[i]
 
+
 class RandomGenV2(RandomGenABC):
 
     def next_num(self):
@@ -130,3 +133,28 @@ class RandomGenV2(RandomGenABC):
         return random.choices(self.bins, self.probabilities, k=1)[0]
 
 
+if __name__ == "__main__":
+
+    from randomgen.helpers import Histogram
+
+    rg = (
+        RandomGenV1()
+        .set_bins([1, 2, 3])
+        .set_probabilities([0.2, 0.2, 0.6])
+        .validate()
+    )
+
+    random_numbers = rg.generate(10000)
+
+    observed = (
+        Histogram()
+        .set_numbers(random_numbers)
+        .calc()
+    )
+
+    # Expected distribution
+    expected = dict(zip(rg.bins, rg.probabilities))
+    print("Expected distribution:", expected)
+
+    # Observed distribution
+    print("Observed distribution:", observed)
