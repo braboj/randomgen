@@ -17,6 +17,7 @@ class RandomGenABC(metaclass=ABCMeta):
     def __init__(self):
         self.numbers = ()
         self.probabilities = ()
+        self.cumulative_probabilities = []
 
     def __str__(self):
         return f"Numbers: {self.numbers}, Probabilities: {self.probabilities}"
@@ -56,9 +57,6 @@ class RandomGenABC(metaclass=ABCMeta):
 
 class RandomGenV1(RandomGenABC):
 
-    def __init__(self):
-        super().__init__()
-        self.cumulative_probabilities = []
 
     def set_numbers(self, numbers):
         self.numbers = numbers
