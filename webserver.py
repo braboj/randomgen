@@ -1,7 +1,7 @@
 from randomgen.core import RandomGenV1, RandomGenV2
 from randomgen.hypothesis import ChiSquareTest
 from flask import Flask, jsonify, request
-from randomgen.helpers import Histogram
+from randomgen.histogram import Histogram
 
 
 ###############################################################################
@@ -41,7 +41,6 @@ def generate_random_numbers(randomgen, amount, version=1):
         ChiSquareTest()
         .set_observed_numbers(random_numbers)
         .set_expected_probabilities(app.probabilities)
-        .calc()
     )
 
     # Prepare the response
@@ -129,7 +128,7 @@ def api_v1_generate_numbers():
     rg = (
         RandomGenV1()
         .set_numbers(app.bins)
-        .set_expected_probabilities(app.probabilities)
+        .set_probabilities(app.probabilities)
         .validate()
     )
 
@@ -147,7 +146,7 @@ def api_v2_generate_numbers():
     rg = (
         RandomGenV2()
         .set_numbers(app.bins)
-        .set_expected_probabilities(app.probabilities)
+        .set_probabilities(app.probabilities)
         .validate()
     )
 

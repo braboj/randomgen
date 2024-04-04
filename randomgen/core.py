@@ -42,11 +42,11 @@ class RandomGenABC(metaclass=ABCMeta):
         elif isinstance(self.numbers, dict):
             raise RandomGenTypeError()
 
-        # Check if the any member is not a number
+        # Check if any member is not a number
         elif not all(isinstance(num, (int, float)) for num in self.numbers):
             raise RandomGenTypeError()
 
-        # Check if the numbers list is empty
+        # Check if the number list is empty
         elif not self.numbers:
             raise RandomGenEmptyError()
 
@@ -78,7 +78,7 @@ class RandomGenABC(metaclass=ABCMeta):
         elif isinstance(self.probabilities, dict):
             raise RandomGenTypeError()
 
-        # Check if the any member is not a number
+        # Check if any member is not a number
         elif not all(
                 isinstance(prob, (int, float)) for prob in self.probabilities):
             raise RandomGenTypeError()
@@ -140,7 +140,7 @@ class RandomGenV2(RandomGenABC):
 
 if __name__ == "__main__":
 
-    from randomgen.helpers import Histogram
+    from randomgen.histogram import Histogram
 
     rg = (
         RandomGenV1()

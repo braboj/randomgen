@@ -1,5 +1,5 @@
 from randomgen.core import RandomGenV1, RandomGenV2
-from randomgen.helpers import Histogram
+from randomgen.histogram import Histogram
 from randomgen.hypothesis import ChiSquareTest
 
 

@@ -3,6 +3,11 @@ from collections import Counter
 from scipy.stats import chi2
 from abc import ABCMeta, abstractmethod
 
+from randomgen.errors import (
+    RandomGenTypeError,
+    RandomGenEmptyError
+)
+
 
 class HypothesisTestAbc(metaclass=ABCMeta):
 
@@ -11,11 +16,15 @@ class HypothesisTestAbc(metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
+    def validate_observed_numbers(self):
+        raise NotImplementedError
+
+    @abstractmethod
     def set_expected_probabilities(self, probabilities):
         raise NotImplementedError
 
     @abstractmethod
-    def calc(self):
+    def validate_probabilities(self):
         raise NotImplementedError
 
     @abstractmethod
@@ -47,6 +56,12 @@ class ChiSquareTest(HypothesisTestAbc):
         # P-value
         self.p_value = None
 
+        # Observed random numbers
+        self.numbers = ()
+
+        # Given probabilities to test
+        self.probabilities = ()
+
     def __str__(self):
         message = (
             f"Chi-square: {self.chi_square}, "
@@ -57,16 +72,69 @@ class ChiSquareTest(HypothesisTestAbc):
         return message
 
     def set_observed_numbers(self, numbers):
-        self.random_numbers = numbers
+        self.numbers = numbers
+        return self
+
+    def validate_observed_numbers(self):
+
+        if self.numbers is None:
+            raise RandomGenTypeError()
+
+        elif isinstance(self.numbers, dict):
+            raise RandomGenTypeError()
+
+        elif not hasattr(self.numbers, '__iter__'):
+            raise RandomGenTypeError()
+
+        elif not all(
+                isinstance(num, (int, float)) for num in self.numbers):
+            raise RandomGenTypeError()
+
+        elif not self.numbers:
+            raise RandomGenEmptyError()
+
         return self
 
     def set_expected_probabilities(self, probabilities):
         self.probabilities = probabilities
         return self
 
-    def calc(self):
+    def validate_probabilities(self):
+
+        if self.probabilities is None:
+            raise RandomGenTypeError()
+
+        elif isinstance(self.probabilities, dict):
+            raise RandomGenTypeError()
+
+        elif not hasattr(self.probabilities, '__iter__'):
+            raise RandomGenTypeError()
+
+        elif not all(
+                isinstance(num, (int, float)) for num in self.probabilities):
+            raise RandomGenTypeError()
+
+        elif not self.probabilities:
+            raise RandomGenEmptyError()
+
+        return self
+
+    def test(self, alpha=0.05):
+        """ Perform the chi-square test for the given significance level
+
+        It tells us how likely it is that the null hypothesis is true. The
+        null hypothesis is that the observed distribution is the same as the
+        expected distribution.
+
+        Args:
+            alpha (float): Significance level
+
+        Returns:
+            bool: True if the null hypothesis is not rejected, False otherwise
+
+        """
         # Calculate the frequency of each number
-        self.counter = Counter(self.random_numbers)
+        self.counter = Counter(self.numbers)
 
         # Calculate the total number of random numbers
         self.total = sum(self.counter.values())
@@ -111,28 +179,13 @@ class ChiSquareTest(HypothesisTestAbc):
         # Calculate the p-value that corresponds to the chi-square value
         self.p_value = 1 - chi2.cdf(self.chi_square, self.df)
 
-        return self
-
-    def test(self, alpha = 0.05):
-        """ Perform the chi-square test for the given significance level
-
-        It tells us how likely it is that the null hypothesis is true. The
-        null hypothesis is that the observed distribution is the same as the
-        expected distribution.
-
-        Args:
-            alpha (float): Significance level
-
-        Returns:
-            bool: True if the null hypothesis is not rejected, False otherwise
-
-        """
-
         # Scipy/Numpy hijacks bool somehow, and it becomes a bool_ object.
         # Unfortunately, this causes some problems when comparing the result
         # using the is operator (e.g bool(0.05) is False).
 
-        return bool(self.p_value > alpha)
+        result = self.p_value > alpha
+
+        return bool(result)
 
 
 if __name__ == "__main__":
@@ -146,7 +199,6 @@ if __name__ == "__main__":
         ChiSquareTest()
         .set_observed_numbers(nums)
         .set_expected_probabilities(probs)
-        .calc()
         .test()
     )
 
@@ -160,7 +212,6 @@ if __name__ == "__main__":
         ChiSquareTest()
         .set_observed_numbers(nums)
         .set_expected_probabilities(probs)
-        .calc()
         .test()
     )
 

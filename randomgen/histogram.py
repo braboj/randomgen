@@ -1,4 +1,8 @@
 from collections import Counter
+from randomgen.errors import (
+    RandomGenTypeError,
+    RandomGenEmptyError
+)
 
 
 class Histogram(dict):
@@ -6,20 +10,49 @@ class Histogram(dict):
 
     def __init__(self):
         super().__init__()
-        self.random_numbers = ()
+        self.numbers = ()
         self.counter = 0
         self.total = 0
+        self.probabilities = ()
 
     def from_dict(self, histogram):
         self.update(histogram)
         return self
 
     def set_numbers(self, numbers):
-        self.random_numbers = numbers
+        self.numbers = numbers
+        return self
+
+    def validate_numbers(self):
+
+        # Check if the numbers is None
+        if self.numbers is None:
+            raise RandomGenTypeError()
+
+        # Check if the numbers are a dictionary
+        elif isinstance(self.numbers, dict):
+            raise RandomGenTypeError()
+
+        # Check if the numbers are iterable
+        elif not hasattr(self.numbers, '__iter__'):
+            raise RandomGenTypeError()
+
+        # Check if any member is not a number
+        elif not all(isinstance(n, (int, float)) for n in self.numbers):
+            raise RandomGenTypeError()
+
+        # Check if the number list is empty
+        elif not self.numbers:
+            raise RandomGenEmptyError()
+
+        return self
+
+    def validate(self):
+        self.validate_numbers()
         return self
 
     def calc(self):
-        self.counter = Counter(self.random_numbers)
+        self.counter = Counter(self.numbers)
         self.total = sum(self.counter.values())
         self.update(
             {
@@ -44,6 +77,7 @@ if __name__ == "__main__":
     h1 = (
         Histogram()
         .set_numbers(random_numbers)
+        .validate_numbers()
         .calc()
     )
     print(h1)
