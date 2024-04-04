@@ -4,14 +4,26 @@ from scipy.stats import chi2
 from abc import ABCMeta, abstractmethod
 
 
-class HypothesisTest(metaclass=ABCMeta):
+class HypothesisTestAbc(metaclass=ABCMeta):
+
+    @abstractmethod
+    def set_numbers(self, numbers):
+        raise NotImplementedError
+
+    @abstractmethod
+    def set_probabilities(self, probabilities):
+        raise NotImplementedError
+
+    @abstractmethod
+    def calculate(self):
+        raise NotImplementedError
 
     @abstractmethod
     def test(self, alpha=0.05):
-        pass
+        raise NotImplementedError
 
 
-class ChiSquareTest(HypothesisTest):
+class ChiSquareTest(HypothesisTestAbc):
 
     def __init__(self):
 
@@ -45,7 +57,7 @@ class ChiSquareTest(HypothesisTest):
 
         return message
 
-    def set_random_numbers(self, numbers):
+    def set_numbers(self, numbers):
         self.random_numbers = numbers
         return self
 
@@ -53,7 +65,7 @@ class ChiSquareTest(HypothesisTest):
         self.probabilities = probabilities
         return self
 
-    def calc_chi(self):
+    def calculate(self):
 
         # Calculate the frequency of each number
         self.counter = Counter(self.random_numbers)
@@ -98,13 +110,11 @@ class ChiSquareTest(HypothesisTest):
 
         self.df = len(self.counter) - 1
 
-        # Return the object to allow for method chaining
-        return self
-
-    def calc_p(self):
         # Calculate the p-value that corresponds to the chi-square value
         self.p_value = 1 - chi2.cdf(self.chi_square, self.df)
+
         return self
+
 
     def test(self, alpha=0.05):
         """ Test the distribution of random numbers against the given
@@ -132,10 +142,9 @@ if __name__ == "__main__":
     # The result should be True
     hypothesis = (
         ChiSquareTest()
-        .set_random_numbers(nums)
+        .set_numbers(nums)
         .set_probabilities(probs)
-        .calc_chi()
-        .calc_p()
+        .calculate()
         .test()
     )
 
@@ -147,10 +156,9 @@ if __name__ == "__main__":
 
     hypothesis = (
         ChiSquareTest()
-        .set_random_numbers(nums)
+        .set_numbers(nums)
         .set_probabilities(probs)
-        .calc_chi()
-        .calc_p()
+        .calculate()
         .test()
     )
 

@@ -1,5 +1,5 @@
 from randomgen.core import RandomGenV1, RandomGenV2
-from randomgen.histogram import Histogram
+from randomgen.helpers import Histogram
 from randomgen.hypothesis import ChiSquareTest
 
 
@@ -22,7 +22,7 @@ def main(randomgen):
     # Example usage using a fluent interface
     rg = (
         randomgen()
-        .set_numbers(nums)
+        .set_bins(nums)
         .set_probabilities(prob)
         .validate()
     )
@@ -41,7 +41,7 @@ def main(randomgen):
     # Calculate the frequency and probability of each number
     observed = (
         Histogram()
-        .set_random_numbers(randoms)
+        .set_numbers(randoms)
         .build()
         # .plot()
     )
@@ -50,10 +50,9 @@ def main(randomgen):
     # Test the distribution of random numbers
     hypothesis = (
         ChiSquareTest()
-        .set_random_numbers(randoms)
+        .set_numbers(randoms)
         .set_probabilities(prob)
-        .calc_chi()
-        .calc_p()
+        .calculate()
         .test()
     )
     print("Hypothesis is: ", hypothesis)

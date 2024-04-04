@@ -1,4 +1,4 @@
-class RandomGeneratorError(Exception):
+class RandomGenError(Exception):
 
     def __init__(self, message):
         super().__init__(message)
@@ -7,8 +7,21 @@ class RandomGeneratorError(Exception):
     def set_message(cls, message):
         cls.message = message
 
+class RandomGenTypeError(RandomGenError):
 
-class RandomGenLengthError(RandomGeneratorError):
+        MESSAGE = "The numbers and probabilities must be a list of numbers."
+
+        def __init__(self):
+            super().__init__(message=self.MESSAGE)
+
+class RandomGenEmptyError(RandomGenError):
+
+    MESSAGE = "The numbers and probabilities lists must not be empty."
+
+    def __init__(self):
+        super().__init__(message=self.MESSAGE)
+
+class RandomGenMismatchError(RandomGenError):
 
     MESSAGE = "The numbers and probabilities lists must have the same length."
 
@@ -16,7 +29,7 @@ class RandomGenLengthError(RandomGeneratorError):
         super().__init__(message=self.MESSAGE)
 
 
-class RandomGenSumError(RandomGeneratorError):
+class RandomGenSumError(RandomGenError):
 
     MESSAGE = "Probabilities must sum to 1."
 
@@ -24,7 +37,7 @@ class RandomGenSumError(RandomGeneratorError):
         super().__init__(message=self.MESSAGE)
 
 
-class RandomGenNegativeError(RandomGeneratorError):
+class RandomGenNegativeError(RandomGenError):
 
     MESSAGE = "Probabilities must be non-negative."
 
