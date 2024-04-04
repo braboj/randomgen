@@ -57,7 +57,7 @@ class RandomGenV1(RandomGenABC):
             raise RandomGenLengthError()
 
         # Check if the probabilities sum to 1
-        if sum(self.probabilities) != 1:
+        if round(sum(self.probabilities), 3) != 1:
             raise RandomGenSumError()
 
         # Check if the probabilities are non-negative
@@ -90,7 +90,7 @@ class RandomGenV2(RandomGenABC):
             raise RandomGenLengthError()
 
         # Check if the probabilities sum to 1
-        if sum(self.probabilities) != 1:
+        if round(sum(self.probabilities), 3) != 1:
             raise RandomGenSumError()
 
         # Check if the probabilities are non-negative
