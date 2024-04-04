@@ -4,7 +4,7 @@ from scipy.stats import chi2
 from abc import ABCMeta, abstractmethod
 
 
-class HypothesisTest(metaclass=ABCMeta):
+class HypothesisTestAbc(metaclass=ABCMeta):
 
     @abstractmethod
     def set_numbers(self, numbers):
@@ -23,7 +23,7 @@ class HypothesisTest(metaclass=ABCMeta):
         raise NotImplementedError
 
 
-class ChiSquareTest(HypothesisTest):
+class ChiSquareTest(HypothesisTestAbc):
 
     def __init__(self):
 
