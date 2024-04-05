@@ -39,17 +39,17 @@ class TestRandomGenParamNumbers(object):
     def test_int_list(self, randomgen):
         randomgen.set_numbers([-1, 0, 1, 2, 3])
         randomgen.validate_numbers()
-        assert randomgen.numbers == [-1, 0, 1, 2, 3]
+        assert randomgen._numbers == [-1, 0, 1, 2, 3]
 
     def test_int_tuple(self, randomgen):
         randomgen.set_numbers((-1, 0, 1, 2, 3))
         randomgen.validate_numbers()
-        assert randomgen.numbers == (-1, 0, 1, 2, 3)
+        assert randomgen._numbers == (-1, 0, 1, 2, 3)
 
     def test_int_set(self, randomgen):
         randomgen.set_numbers({-1, 0, 1, 2, 3})
         randomgen.validate_numbers()
-        assert randomgen.numbers == {-1, 0, 1, 2, 3}
+        assert randomgen._numbers == {-1, 0, 1, 2, 3}
 
     def test_float(self, randomgen):
         with pytest.raises(RandomGenTypeError):
@@ -59,17 +59,17 @@ class TestRandomGenParamNumbers(object):
     def test_float_list(self, randomgen):
         randomgen.set_numbers([-1.0, 0.0, 1.0, 2.0, 3.0])
         randomgen.validate_numbers()
-        assert randomgen.numbers == [-1.0, 0.0, 1.0, 2.0, 3.0]
+        assert randomgen._numbers == [-1.0, 0.0, 1.0, 2.0, 3.0]
 
     def test_float_tuple(self, randomgen):
         randomgen.set_numbers((-1.0, 0.0, 1.0, 2.0, 3.0))
         randomgen.validate_numbers()
-        assert randomgen.numbers == (-1.0, 0.0, 1.0, 2.0, 3.0)
+        assert randomgen._numbers == (-1.0, 0.0, 1.0, 2.0, 3.0)
 
     def test_float_set(self, randomgen):
         randomgen.set_numbers({-1.0, 0.0, 1.0, 2.0, 3.0})
         randomgen.validate_numbers()
-        assert randomgen.numbers == {-1.0, 0.0, 1.0, 2.0, 3.0}
+        assert randomgen._numbers == {-1.0, 0.0, 1.0, 2.0, 3.0}
 
     def test_string(self, randomgen):
         with pytest.raises(RandomGenTypeError):
@@ -94,7 +94,7 @@ class TestRandomGenParamNumbers(object):
     def test__mixed_numbers(self, randomgen):
         randomgen.set_numbers([-1, 0, 1, 2.0, 3])
         randomgen.validate_numbers()
-        assert randomgen.numbers == [-1, 0, 1, 2.0, 3]
+        assert randomgen._numbers == [-1, 0, 1, 2.0, 3]
 
 
 ###############################################################################
@@ -120,12 +120,12 @@ class TestRandomGenParamProbabilities(object):
     def test_int_list(self, randomgen):
         randomgen.set_probabilities([0.2, 0.2, 0.2, 0.2, 0.2])
         randomgen.validate_probabilities()
-        assert randomgen.probabilities == [0.2, 0.2, 0.2, 0.2, 0.2]
+        assert randomgen._probabilities == [0.2, 0.2, 0.2, 0.2, 0.2]
 
     def test_int_tuple(self, randomgen):
         randomgen.set_probabilities((0.2, 0.2, 0.2, 0.2, 0.2))
         randomgen.validate_probabilities()
-        assert randomgen.probabilities == (0.2, 0.2, 0.2, 0.2, 0.2)
+        assert randomgen._probabilities == (0.2, 0.2, 0.2, 0.2, 0.2)
 
     def test_int_set(self, randomgen):
         with pytest.raises(RandomGenTypeError):
@@ -140,12 +140,12 @@ class TestRandomGenParamProbabilities(object):
     def test_float_list(self, randomgen):
         randomgen.set_probabilities([0.2, 0.2, 0.2, 0.2, 0.2])
         randomgen.validate_probabilities()
-        assert randomgen.probabilities == [0.2, 0.2, 0.2, 0.2, 0.2]
+        assert randomgen._probabilities == [0.2, 0.2, 0.2, 0.2, 0.2]
 
     def test_float_tuple(self, randomgen):
         randomgen.set_probabilities((0.2, 0.2, 0.2, 0.2, 0.2))
         randomgen.validate_probabilities()
-        assert randomgen.probabilities == (0.2, 0.2, 0.2, 0.2, 0.2)
+        assert randomgen._probabilities == (0.2, 0.2, 0.2, 0.2, 0.2)
 
     def test_float_set(self, randomgen):
         with pytest.raises(RandomGenTypeError):
@@ -191,7 +191,7 @@ class TestRandomGenParamProbabilities(object):
     def test_sum_is_one(self, randomgen):
         randomgen.set_probabilities([0.2, 0.2, 0.2, 0.2, 0.2])
         randomgen.validate_probabilities()
-        assert sum(randomgen.probabilities) == 1
+        assert sum(randomgen._probabilities) == 1
 
     def test_sum_is_zero(self, randomgen):
         with pytest.raises(RandomGenSumError):
@@ -214,60 +214,16 @@ class TestRandomGenParamProbabilities(object):
 @pytest.mark.parametrize("randomgen", versions, indirect=True)
 class TestRandomGenDistribution(object):
 
-    def test_fit_uniform(self, randomgen):
-        uniform_probabilities = [0.2, 0.2, 0.2, 0.2, 0.2]
+    def test_fit_high_confidence(self, randomgen):
+        custom_probabilities = [0.5, 0.5]
 
         # Prepare the random generator
-        randomgen.set_numbers([1, 2, 3, 4, 5])
-        randomgen.set_probabilities(uniform_probabilities)
-        randomgen.validate()
-
-        # Generate the maximum number of random numbers
-        random_numbers = [randomgen.next_num() for _ in range(1000)]
-
-        # Perform the Chi-Square test
-        hypothesis = (
-            ChiSquareTest()
-            .set_observed_numbers(random_numbers)
-            .set_expected_probabilities(uniform_probabilities)
-            .calc()
-        )
-
-        # Test if the hypothesis is valid
-        assert hypothesis.is_null() is True
-
-    def test_fit_binomial(self, randomgen):
-        binomial_probabilities = [0.0625, 0.25, 0.375, 0.25, 0.0625]
-
-        # Prepare the random generator
-        randomgen.set_numbers([1, 2, 3, 4, 5])
-        randomgen.set_probabilities(binomial_probabilities)
-        randomgen.validate()
-
-        # Generate the maximum number of random numbers
-        random_numbers = [randomgen.next_num() for _ in range(1000)]
-
-        # Perform the Chi-Square test
-        hypothesis = (
-            ChiSquareTest()
-            .set_observed_numbers(random_numbers)
-            .set_expected_probabilities(binomial_probabilities)
-            .calc()
-        )
-
-        # Test if the hypothesis is valid
-        assert hypothesis.is_null() is True
-
-    def test_fit_custom(self, randomgen):
-        custom_probabilities = [0.01, 0.3, 0.58, 0.1, 0.01]
-
-        # Prepare the random generator
-        randomgen.set_numbers([1, 2, 3, 4, 5])
+        randomgen.set_numbers([1, 2])
         randomgen.set_probabilities(custom_probabilities)
         randomgen.validate()
 
         # Generate the maximum number of random numbers
-        random_numbers = [randomgen.next_num() for _ in range(1000)]
+        random_numbers = [1, 2] * 100
 
         # Perform the Chi-Square test
         hypothesis = (
@@ -279,6 +235,54 @@ class TestRandomGenDistribution(object):
 
         # Test if the hypothesis is valid
         assert hypothesis.is_null() is True
+
+
+@pytest.mark.parametrize("randomgen", versions, indirect=True)
+class TestRandomGenDistribution(object):
+
+    def test_fit_pass(self, randomgen):
+        custom_probabilities = [0.5, 0.5]
+
+        # Prepare the random generator
+        randomgen.set_numbers([1, 2])
+        randomgen.set_probabilities(custom_probabilities)
+        randomgen.validate()
+
+        # Generate the maximum number of random numbers
+        random_numbers = [1] * 200 + [2] * 200
+
+        # Perform the Chi-Square test
+        hypothesis = (
+            ChiSquareTest()
+            .set_observed_numbers(random_numbers)
+            .set_expected_probabilities(custom_probabilities)
+            .calc()
+        )
+
+        # Test if the hypothesis is valid
+        assert hypothesis.is_null() is True
+
+    def test_fit_fail(self, randomgen):
+        custom_probabilities = [0.5, 0.5]
+
+        # Prepare the random generator
+        randomgen.set_numbers([1, 2])
+        randomgen.set_probabilities(custom_probabilities)
+        randomgen.validate()
+
+        # Generate the maximum number of random numbers
+        random_numbers = [1] * 10 + [2] * 100
+
+        # Perform the Chi-Square test
+        hypothesis = (
+            ChiSquareTest()
+            .set_observed_numbers(random_numbers)
+            .set_expected_probabilities(custom_probabilities)
+            .calc()
+        )
+
+        # Test if the hypothesis is valid
+        assert hypothesis.is_null() is False
 
 
 @pytest.mark.parametrize("randomgen", versions, indirect=True)

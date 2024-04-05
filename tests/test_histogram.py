@@ -39,17 +39,17 @@ class TestHistogramParamNumbers(object):
     def test_int_list(self, histogram):
         histogram.set_numbers([-1, 0, 1, 2, 3])
         histogram.validate_numbers()
-        assert histogram.numbers == [-1, 0, 1, 2, 3]
+        assert histogram._numbers == [-1, 0, 1, 2, 3]
 
     def test_int_tuple(self, histogram):
         histogram.set_numbers((-1, 0, 1, 2, 3))
         histogram.validate_numbers()
-        assert histogram.numbers == (-1, 0, 1, 2, 3)
+        assert histogram._numbers == (-1, 0, 1, 2, 3)
 
     def test_int_set(self, histogram):
         histogram.set_numbers({-1, 0, 1, 2, 3})
         histogram.validate_numbers()
-        assert histogram.numbers == {-1, 0, 1, 2, 3}
+        assert histogram._numbers == {-1, 0, 1, 2, 3}
 
     def test_float(self, histogram):
         with pytest.raises(RandomGenTypeError):
@@ -59,17 +59,17 @@ class TestHistogramParamNumbers(object):
     def test_float_list(self, histogram):
         histogram.set_numbers([-1.0, 0.0, 1.0, 2.0, 3.0])
         histogram.validate_numbers()
-        assert histogram.numbers == [-1.0, 0.0, 1.0, 2.0, 3.0]
+        assert histogram._numbers == [-1.0, 0.0, 1.0, 2.0, 3.0]
 
     def test_float_tuple(self, histogram):
         histogram.set_numbers((-1.0, 0.0, 1.0, 2.0, 3.0))
         histogram.validate_numbers()
-        assert histogram.numbers == (-1.0, 0.0, 1.0, 2.0, 3.0)
+        assert histogram._numbers == (-1.0, 0.0, 1.0, 2.0, 3.0)
 
     def test_float_set(self, histogram):
         histogram.set_numbers({-1.0, 0.0, 1.0, 2.0, 3.0})
         histogram.validate_numbers()
-        assert histogram.numbers == {-1.0, 0.0, 1.0, 2.0, 3.0}
+        assert histogram._numbers == {-1.0, 0.0, 1.0, 2.0, 3.0}
 
     def test_string(self, histogram):
         with pytest.raises(RandomGenTypeError):
@@ -94,7 +94,7 @@ class TestHistogramParamNumbers(object):
     def test__mixed_numbers(self, histogram):
         histogram.set_numbers([-1, 0, 1, 2.0, 3])
         histogram.validate_numbers()
-        assert histogram.numbers == [-1, 0, 1, 2.0, 3]
+        assert histogram._numbers == [-1, 0, 1, 2.0, 3]
 
 
 @pytest.mark.parametrize("histogram", versions, indirect=True)

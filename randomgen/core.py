@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 from randomgen.errors import (
     RandomGenMismatchError,
     RandomGenSumError,
@@ -10,103 +12,168 @@ from abc import ABCMeta, abstractmethod
 
 
 class RandomGenABC(metaclass=ABCMeta):
+    """Abstract base class for random number generators.
+
+    Attributes:
+        _numbers: A list of numbers.
+        _probabilities: A list of probabilities.
+        _cumulative_probabilities: A list of cumulative probabilities.
+
+    """
 
     def __init__(self):
-        self.numbers = ()
-        self.probabilities = ()
-        self.cumulative_probabilities = []
+        self._numbers = ()
+        self._probabilities = ()
+        self._cumulative_probabilities = []
 
     def __str__(self):
-        return f"Numbers: {self.numbers}, Probabilities: {self.probabilities}"
+        return f"Numbers: {self._numbers}, Probabilities: {self._probabilities}"
 
-    def from_dict(self, histogram):
-        self.numbers = histogram.keys
-        self.probabilities = histogram.values
+    def from_dict(self, dict_obj):
+        """Set the numbers and probabilities from a dictionary.
+
+        Args:
+            dict_obj: A dictionary of numbers and probabilities.
+
+        Returns:
+            self: The instance of the class.
+
+        """
+
+        self._numbers = dict_obj.keys
+        self._probabilities = dict_obj.values
+
         return self
 
-    def set_numbers(self, numbers):
-        self.numbers = numbers
+    def set_numbers(self, values):
+        """Set the numbers (similar to the categories in a histogram).
+
+        Args:
+            values: A list of numbers.
+
+        Returns:
+            self: The instance of the class.
+
+        """
+
+        self._numbers = values
         return self
 
     def validate_numbers(self):
+        """Validate the numbers.
+
+        Returns:
+            self: The instance of the class.
+
+        """
 
         # Check if the numbers is None
-        if self.numbers is None:
+        if self._numbers is None:
             raise RandomGenTypeError()
 
         # Check if the numbers are iterable
-        elif not hasattr(self.numbers, '__iter__'):
+        elif not hasattr(self._numbers, '__iter__'):
             raise RandomGenTypeError()
 
         # Check if dictionary
-        elif isinstance(self.numbers, dict):
+        elif isinstance(self._numbers, dict):
             raise RandomGenTypeError()
 
         # Check if any member is not a number
-        elif not all(isinstance(num, (int, float)) for num in self.numbers):
+        elif not all(isinstance(num, (int, float)) for num in self._numbers):
             raise RandomGenTypeError()
 
         # Check if the number list is empty
-        elif not self.numbers:
+        elif not self._numbers:
             raise RandomGenEmptyError()
 
         return self
 
-    def set_probabilities(self, probabilities):
-        self.probabilities = probabilities
+    def set_probabilities(self, values):
+        """ Set the probabilities.
+
+        Args:
+            values: A list of probabilities.
+
+        Returns:
+            self: The instance of the class.
+
+        """
+
+        self._probabilities = values
         return self
 
     def validate_probabilities(self):
+        """ Validate the probabilities.
+
+        Returns:
+            self: The instance of the class.
+
+        """
 
         # Check if the probabilities is None
-        if self.probabilities is None:
+        if self._probabilities is None:
             raise RandomGenTypeError()
 
         # Check if the numbers are iterable
-        elif not hasattr(self.probabilities, '__iter__'):
+        elif not hasattr(self._probabilities, '__iter__'):
             raise RandomGenTypeError()
 
         # Check if empty
-        elif not self.probabilities:
+        elif not self._probabilities:
             raise RandomGenEmptyError()
 
         # Check if set
-        elif isinstance(self.probabilities, set):
+        elif isinstance(self._probabilities, set):
             raise RandomGenTypeError()
 
         # Check if dictionary
-        elif isinstance(self.probabilities, dict):
+        elif isinstance(self._probabilities, dict):
             raise RandomGenTypeError()
 
         # Check if any member is not a number
         elif not all(
-                isinstance(prob, (int, float)) for prob in self.probabilities):
+                isinstance(prob, (int, float)) for prob in self._probabilities):
             raise RandomGenTypeError()
 
         # Check if the probabilities are non-negative
-        elif any(probability < 0 for probability in self.probabilities):
+        elif any(probability < 0 for probability in self._probabilities):
             raise RandomGenTypeError()
 
         # Check if the probabilities sum to 1
-        elif round(sum(self.probabilities), 3) != 1:
+        elif round(sum(self._probabilities), 3) != 1:
             raise RandomGenSumError()
 
         return self
 
     def calc_cdf(self):
-        self.cumulative_probabilities = [
-            sum(self.probabilities[:i + 1])
+        """ Calculate the cumulative probabilities.
+
+        Returns:
+            self: The instance of the class.
+
+        """
+
+        self._cumulative_probabilities = [
+            sum(self._probabilities[:i + 1])
             for i in
-            range(len(self.probabilities))
+            range(len(self._probabilities))
         ]
 
     def validate(self):
+        """ Validate all the attributes of the class.
 
+        Returns:
+            self: The instance of the class.
+
+        """
+
+        # Validate the numbers and probabilities
         self.validate_numbers()
         self.validate_probabilities()
 
         # Check if the numbers and probabilities' lists have the same length
-        if len(self.numbers) != len(self.probabilities):
+        if len(self._numbers) != len(self._probabilities):
             raise RandomGenMismatchError()
 
         # After the validation calculate the cumulative probabilities
@@ -115,28 +182,48 @@ class RandomGenABC(metaclass=ABCMeta):
         return self
 
     def generate(self, amount):
+        """ Generate random numbers based on the probabilities.
+
+        Args:
+            amount: The number of random numbers to generate.
+
+        Returns:
+            A list of random numbers.
+
+        """
+
         return [self.next_num() for _ in range(amount)]
 
     @abstractmethod
     def next_num(self):
-        pass
+        """ Abstract method to generate the next random number.
+
+        Returns:
+            A random number.
+
+        """
+        raise NotImplementedError
 
 
 class RandomGenV1(RandomGenABC):
 
     def next_num(self):
         rand = random.random()
-        for i, cum_prob in enumerate(self.cumulative_probabilities):
+        for i, cum_prob in enumerate(self._cumulative_probabilities):
             if rand <= cum_prob:
-                return self.numbers[i]
+                return self._numbers[i]
 
 
 class RandomGenV2(RandomGenABC):
 
     def next_num(self):
         # Use random.choices to select a number based on the probabilities
-        return random.choices(self.numbers, self.probabilities, k=1)[0]
+        return random.choices(self._numbers, self._probabilities, k=1)[0]
 
+
+################################################################################
+# Example
+################################################################################
 
 if __name__ == "__main__":
 
@@ -158,7 +245,7 @@ if __name__ == "__main__":
     )
 
     # Expected distribution
-    expected = dict(zip(rg.numbers, rg.probabilities))
+    expected = dict(zip(rg._numbers, rg._probabilities))
     print("Expected distribution:", expected)
 
     # Observed distribution

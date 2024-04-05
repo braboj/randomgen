@@ -1,6 +1,8 @@
+# encoding: utf-8
+
 import random
-from collections import Counter
 from scipy.stats import chi2
+from collections import Counter
 from abc import ABCMeta, abstractmethod
 
 from randomgen.errors import (
@@ -12,7 +14,7 @@ from randomgen.errors import (
 class HypothesisTestAbc(metaclass=ABCMeta):
 
     @abstractmethod
-    def set_observed_numbers(self, numbers):
+    def set_observed_numbers(self, values):
         raise NotImplementedError
 
     @abstractmethod
@@ -20,7 +22,7 @@ class HypothesisTestAbc(metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def set_expected_probabilities(self, probabilities):
+    def set_expected_probabilities(self, values):
         raise NotImplementedError
 
     @abstractmethod
@@ -32,7 +34,11 @@ class HypothesisTestAbc(metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def calc(self, alpha=0.05):
+    def calc(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def is_null(self, alpha=0.05):
         raise NotImplementedError
 
 
@@ -40,16 +46,16 @@ class ChiSquareTest(HypothesisTestAbc):
 
     def __init__(self):
         # Counter for the random numbers
-        self.counter = None
+        self._counter = None
 
         # Total number of random numbers
-        self.total = None
+        self._total = None
 
         # Histogram of the random numbers
-        self.observed = None
+        self._observed = None
 
         # Expected histogram based on the probabilities
-        self.expected = None
+        self._expected = None
 
         # Chi-square value
         self.chi_square = None
@@ -67,16 +73,13 @@ class ChiSquareTest(HypothesisTestAbc):
         self.probabilities = ()
 
     def __str__(self):
-        message = (
-            f"Chi-square: {self.chi_square}, "
-            f"Degrees of freedom: {self.df}, "
-            f"P-value: {self.p_value}",
-        )
+        message = (f"Chi-square: {self.chi_square} df: {self.df} P-value"
+                   f":{self.p_value} Null hypothesis: {self.is_null()}")
 
         return message
 
-    def set_observed_numbers(self, numbers):
-        self.numbers = numbers
+    def set_observed_numbers(self, values):
+        self.numbers = values
         return self
 
     def validate_observed_numbers(self):
@@ -99,8 +102,8 @@ class ChiSquareTest(HypothesisTestAbc):
 
         return self
 
-    def set_expected_probabilities(self, probabilities):
-        self.probabilities = probabilities
+    def set_expected_probabilities(self, values):
+        self.probabilities = values
         return self
 
     def validate_expected_probabilities(self):
@@ -128,42 +131,37 @@ class ChiSquareTest(HypothesisTestAbc):
         self.validate_expected_probabilities()
         return self
 
-    def calc(self, alpha=0.05):
+    def calc(self):
         """ Perform the chi-square test for the given significance level
 
         It tells us how likely it is that the null hypothesis is true. The
         null hypothesis is that the observed distribution is the same as the
         expected distribution.
 
-        Args:
-            alpha (float): Significance level
-
-        Returns:
-            bool: True if the null hypothesis is not rejected, False otherwise
-
         """
+
         # Calculate the frequency of each number
-        self.counter = Counter(self.numbers)
+        self._counter = Counter(self.numbers)
 
         # Calculate the total number of random numbers
-        self.total = sum(self.counter.values())
+        self._total = sum(self._counter.values())
 
         # Generate the observed histogram
-        self.observed = {num: count / self.total for num, count in
-                         self.counter.items()}
+        self._observed = {num: count / self._total for num, count in
+                          self._counter.items()}
 
         # Convert the histogram to a sorted dictionary
-        self.observed = dict(sorted(self.observed.items()))
+        self._observed = dict(sorted(self._observed.items()))
 
         # Generate the expected histogram based on the probabilities
         # ---------------------------------------------------------
         # This is the expected number of times each number should appear
         # given the probabilities and the total number of random numbers.
 
-        self.expected = {
-            num: probability * self.total
+        self._expected = {
+            num: probability * self._total
             for num, probability
-            in zip(self.observed.keys(), self.probabilities)
+            in zip(self._observed.keys(), self.probabilities)
         }
 
         # Calculate the chi-square value
@@ -172,9 +170,9 @@ class ChiSquareTest(HypothesisTestAbc):
         # expected values divided by the expected values.
 
         self.chi_square = sum(
-            (observed - self.expected[num]) ** 2 / self.expected[num]
+            (observed - self._expected[num]) ** 2 / self._expected[num]
             for num, observed
-            in self.counter.items()
+            in self._counter.items()
         )
 
         # Calculate the degrees of freedom
@@ -183,7 +181,7 @@ class ChiSquareTest(HypothesisTestAbc):
         # parameters estimated from the data. In this case, k = 0, because the
         # probabilities are given.
 
-        self.df = len(self.counter) - 1
+        self.df = len(self._counter) - 1
 
         # Calculate the p-value that corresponds to the chi-square value
         self.p_value = 1 - chi2.cdf(self.chi_square, self.df)
@@ -196,9 +194,7 @@ class ChiSquareTest(HypothesisTestAbc):
         # Unfortunately, this causes some problems when comparing the result
         # using the is operator (e.g bool(0.05) is False).
 
-        result = self.p_value > alpha
-
-        return bool(result)
+        return bool(self.p_value > alpha)
 
 
 if __name__ == "__main__":
@@ -215,7 +211,7 @@ if __name__ == "__main__":
         .calc()
     )
 
-    print("Hypothesis is: ", hypothesis)
+    print("Hypothesis is: ", hypothesis.is_null())
 
     # Now change the probabilities to a different distribution
     # The result should be False
@@ -228,4 +224,4 @@ if __name__ == "__main__":
         .calc()
     )
 
-    print("Hypothesis is: ", hypothesis)
+    print("Hypothesis is: ", hypothesis.is_null())

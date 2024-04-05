@@ -13,7 +13,7 @@ results. As the results are random, these particular results are unlikely.
 3: 0 times
 ```
 
-### Instructions
+### Requirements
 
  - Write a random number generator that returns numbers based on the 
    probabilities provided.
@@ -58,7 +58,7 @@ def next_num(self):
 - Version Control: Git
 - Git Hosting: GitHub
 - CI/CD: GitHub Actions
-- Documentation: MkDocs
+- Documentation: pydoc
 
 ### 2. Validate the data from the problem statement
 
@@ -117,15 +117,16 @@ class RandomGen(object):
 Questions:
 
 1. Do we have constraints regarding the compatibility with older versions of 
-   Python?
+   Python? -> use contaiers
 2. Are we allowed to use external libraries for statistical tests and 
-   visualization?
+   visualization? -> yes, the Chi-Square CDF is very complex for this task
 
 ### 5. Brainstorm the system design
 
 We will implement two classes, one using `random.choices` and the other using
-`random.random`. We will provide an abstract class to be used as an interface for
-both classes. It will also decouple implementation from client code.
+`random.random`. We will provide an abstract class to be used as an 
+interface for both classes. It will also decouple implementation from client 
+code.
 
 ![system_design.png](assets/drawio/system_design.drawio.png)
 
@@ -202,19 +203,23 @@ will have the following endpoints:
 
 ### 8. Manual Integration tests
 
-The following problems arised during the manuals integration tests:
+The following problems arised during the manual's integration tests:
 
 1. **Rounding errors**: Using older versions of Python yield rounding errors. Round the 
    probabilities to 3 decimal places.
 
 
-2. **Fairness**: The Chi-Squared test is not fair in case the number of samples is low. The distribution is fair when the number of random values is above 50.
+1. **Fairness**: The Chi-Squared test is not fair in case the number of 
+   samples is low. The distribution is fair when the number of random values is above 50.
 
 
-3. **Interface** We need to simplify the ChiSquaredTest class to make it more user-friendly. Define method calculate that will the chi-squared, p-value and the degrees of freedom.
+3. **Interface** We need to simplify the ChiSquaredTest class to make it 
+   more user-friendly. Define method calculate that will the chi-squared, 
+   p-value and the degrees of freedom.
 
 
-4. **Configuration**: We will allow the user configure its own distribution using the parameters `numbers` and `probabilities` as defined in the problem statement.
+4. **Configuration**: We will allow the user to configure its own distribution 
+   using the parameters `numbers` and `probabilities` as defined in the problem statement.
 
 
 ### 9. Refactor the backend after the manual tests
@@ -355,6 +360,7 @@ Producing or consuming methods shall not be chained.
 * We will refactor the ChiSquaredTest class to make it more user-friendly. 
 * We will rename the test() method to calc() and remove some methods
 * We need to replace `is fair` with `is null`
+* Encapsulate the internal state of the class as per requirements
 
 
 Snapshot of the Randomgen classes API at this stage:
@@ -417,19 +423,38 @@ print(hist.from_dict(dict(zip([-1, 0, 1, 2, 3], [0.01, 0.3, 0.58, 0.1, 0.01])))
 After the changes, the unittests showed that the solution is working as 
 expected. The server was also tested manually and the results were as expected.
 
+### . Docstrings
+
+Now it is time to add docstrings to the classes and methods. We will use the
+Google docstring format. 
+
 ### . Containerize the solution
 
-We will create a Dockerfile to containerize the solution. We will also create a
-`docker-compose.yml` file to run the tests in a container. The application
-will consist of a flask server that will implement a simple API to access
-the solution. The container will guarantee that the solution will run on any
+We will distribute the solution as a container. The application will consist 
+of a flask server that will implement a simple API to access the random 
+generator. The container will guarantee that the solution will run on any
 machine that has Docker installed.
 
+Considerations:
 
-### . Tag the first increment
+- No multi-stage build is needed as it is a demo application
+- No Docker compose needed as it is a single container application
+- Choose a base image that is small and secure
+- Use a `.dockerignore` file to exclude unnecessary files
+- Use environment variables to configure the application
+- The application is not exposed to the internet (no need for HTTPS)
 
-Till now, we were in the pre-development phase. After the tag, changes will be 
-created only with issues and pull requests.
+
+### . Documentation
+
+We will use MkDocs to build the documentation. The documentation will be
+deployed to GitHub Pages. The documentation will contain the following
+sections:
+
+1. Problem
+2. Solution
+3. Installation
+4. Rest API
 
 ### . Create CI/CD pipeline
 
@@ -440,13 +465,17 @@ Docker image to Docker Hub on every release.
 What we want:
 
 1. Run the tests on every push to the main branch.
-2. Build and push the Docker image to Docker Hub on every release.
-3. Create a release on every tag.
+2. Create a release on every tag.
+3. Build and push the Docker image to Docker Hub on every release.
+4. Build the documentation and deploy it to GitHub Pages on every release.
 
-### . Documentation (optional)
+### . Create the CONTRIBUTING guideline
 
-We will create MkDocs documentation to explain the solution and how to use it.
-We will add some pipeline steps to build the documentation and deploy it to
-GitHub Pages.
+### . Tag the first increment
+
+Till now, we were in the pre-development phase. After the tag, changes will be
+tracked using concrete issues in the commit messages.
+
+
 
 ## Feedback from the client

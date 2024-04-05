@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 from collections import Counter
 from randomgen.errors import (
     RandomGenTypeError,
@@ -10,39 +12,39 @@ class Histogram(dict):
 
     def __init__(self):
         super().__init__()
-        self.numbers = ()
-        self.counter = 0
-        self.total = 0
-        self.probabilities = ()
+        self._numbers = ()
+        self._counter = 0
+        self._total = 0
+        self._probabilities = ()
 
     def from_dict(self, histogram):
         self.update(histogram)
         return self
 
     def set_numbers(self, numbers):
-        self.numbers = numbers
+        self._numbers = numbers
         return self
 
     def validate_numbers(self):
 
         # Check if the numbers is None
-        if self.numbers is None:
+        if self._numbers is None:
             raise RandomGenTypeError()
 
         # Check if the numbers are a dictionary
-        elif isinstance(self.numbers, dict):
+        elif isinstance(self._numbers, dict):
             raise RandomGenTypeError()
 
         # Check if the numbers are iterable
-        elif not hasattr(self.numbers, '__iter__'):
+        elif not hasattr(self._numbers, '__iter__'):
             raise RandomGenTypeError()
 
         # Check if any member is not a number
-        elif not all(isinstance(n, (int, float)) for n in self.numbers):
+        elif not all(isinstance(n, (int, float)) for n in self._numbers):
             raise RandomGenTypeError()
 
         # Check if the number list is empty
-        elif not self.numbers:
+        elif not self._numbers:
             raise RandomGenEmptyError()
 
         return self
@@ -52,13 +54,13 @@ class Histogram(dict):
         return self
 
     def calc(self):
-        self.counter = Counter(self.numbers)
-        self.total = sum(self.counter.values())
+        self._counter = Counter(self._numbers)
+        self._total = sum(self._counter.values())
         self.update(
             {
-                num: count / self.total
+                num: count / self._total
                 for num, count in
-                self.counter.items()
+                self._counter.items()
             }
         )
 

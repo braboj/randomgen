@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 class RandomGenError(Exception):
 
     def __init__(self, message):
