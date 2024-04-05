@@ -299,7 +299,7 @@ some latency.
 The integration tests showed that we need to wrap the exceptions by the backend and return a 
 well-defined HTTP status code. 
 
-### 12. Refactor webserver after the integration tests
+### 12. Refactor the webserver after the integration tests
 
 First, we will refactor the webserver to return a well-defined HTTP status code. We will also
 add a configuration endpoint to allow the user to configure the bins and 
@@ -341,13 +341,14 @@ happy we provided an interface to configure the app using the REST API.
 Some issues were found regarding the interface of the ChiSquaredTest class. The
 tester recommended simplifying the interface to make it more user-friendly. 
 The naming of the methods must also be improved. The tester recommended 
-renaming the methods to make them more intuitive (e.g. `calc()` instead of
-`calculate()` or `test()`).
+renaming the methods (e.g. `calc()` instead of `calculate()` or `test()`).
 
-This opens a new conceptional question about the design. Shall we consider 
-using method chaining for methods that initialize the internal state and 
-then just access the internal state using properties? Are there best practices
-for this kind of design?
+The tester had some difficulties understanding the method chaining This opens 
+a new conceptional question about the design. 
+
+As a thum of rule, we will use the method chaining for methods that initialize
+the internal state and then just access the internal state using properties.
+Producing or consuming methods shall not be chained.
 
 ### 14. Refactor the backend after the feedback
 
@@ -413,7 +414,8 @@ print(hist)
 print(hist.from_dict(dict(zip([-1, 0, 1, 2, 3], [0.01, 0.3, 0.58, 0.1, 0.01])))
 ```
 
-### . Prepare the project distribution
+After the changes, the unittests showed that the solution is working as 
+expected. The server was also tested manually and the results were as expected.
 
 ### . Containerize the solution
 
@@ -424,15 +426,27 @@ the solution. The container will guarantee that the solution will run on any
 machine that has Docker installed.
 
 
+### . Tag the first increment
+
+Till now, we were in the pre-development phase. After the tag, changes will be 
+created only with issues and pull requests.
+
 ### . Create CI/CD pipeline
 
 We will create a GitHub Actions workflow to run the tests on every push to the
 main branch. We will also create a GitHub Actions workflow to build and push the
 Docker image to Docker Hub on every release.
 
-### . Documentation
+What we want:
+
+1. Run the tests on every push to the main branch.
+2. Build and push the Docker image to Docker Hub on every release.
+3. Create a release on every tag.
+
+### . Documentation (optional)
 
 We will create MkDocs documentation to explain the solution and how to use it.
-
+We will add some pipeline steps to build the documentation and deploy it to
+GitHub Pages.
 
 ## Feedback from the client
