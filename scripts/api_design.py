@@ -52,9 +52,9 @@ def main(randomgen):
         .set_observed_numbers(randoms)
         .set_expected_probabilities(prob)
         .calc()
-        .test()
+        .calc()
     )
-    print("Hypothesis is: ", hypothesis)
+    print("Hypothesis is: ", hypothesis.is_null())
 
 
 if __name__ == "__main__":

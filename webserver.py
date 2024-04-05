@@ -41,6 +41,7 @@ def generate_random_numbers(randomgen, amount, version=1):
         ChiSquareTest()
         .set_observed_numbers(random_numbers)
         .set_expected_probabilities(app.probabilities)
+        .calc()
     )
 
     # Prepare the response
@@ -52,7 +53,7 @@ def generate_random_numbers(randomgen, amount, version=1):
         "quality": {
             "chi_square_test":
                 {
-                    'is_fair': int(hypothesis.test()),
+                    'is_fair': int(hypothesis.is_null()),
                     'chi_square': hypothesis.chi_square,
                     'p_value': hypothesis.p_value,
                     'df': hypothesis.df,

@@ -230,10 +230,11 @@ class TestRandomGenDistribution(object):
             ChiSquareTest()
             .set_observed_numbers(random_numbers)
             .set_expected_probabilities(uniform_probabilities)
+            .calc()
         )
 
         # Test if the hypothesis is valid
-        assert  hypothesis.test() is True
+        assert hypothesis.is_null() is True
 
     def test_fit_binomial(self, randomgen):
         binomial_probabilities = [0.0625, 0.25, 0.375, 0.25, 0.0625]
@@ -251,10 +252,11 @@ class TestRandomGenDistribution(object):
             ChiSquareTest()
             .set_observed_numbers(random_numbers)
             .set_expected_probabilities(binomial_probabilities)
+            .calc()
         )
 
         # Test if the hypothesis is valid
-        assert hypothesis.test() is True
+        assert hypothesis.is_null() is True
 
     def test_fit_custom(self, randomgen):
         custom_probabilities = [0.01, 0.3, 0.58, 0.1, 0.01]
@@ -272,10 +274,11 @@ class TestRandomGenDistribution(object):
             ChiSquareTest()
             .set_observed_numbers(random_numbers)
             .set_expected_probabilities(custom_probabilities)
+            .calc()
         )
 
         # Test if the hypothesis is valid
-        assert hypothesis.test() is True
+        assert hypothesis.is_null() is True
 
 
 @pytest.mark.parametrize("randomgen", versions, indirect=True)

@@ -191,18 +191,20 @@ class TestChiSquareFunctional(object):
             hypothesis
             .set_observed_numbers([1, 1, 1, 2, 2, 2])
             .set_expected_probabilities([0.5, 0.5])
+            .calc()
         )
 
-        assert hypothesis.test() is True
+        assert hypothesis.is_null() is True
 
     def test_chi_square_fail(self, hypothesis):
         (
             hypothesis
             .set_observed_numbers([1, 1, 1, 2, 2, 2])
             .set_expected_probabilities([0.1, 0.9])
+            .calc()
         )
 
-        assert hypothesis.test() is False
+        assert hypothesis.is_null() is False
 
 
 if __name__ == "__main__":

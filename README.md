@@ -333,7 +333,85 @@ The response format will be also improved for better readability.
 }
 ```
 
+### 13. Feedback from a beta tester
 
+The beta tester found the solution to be working as expected. The tester was
+happy we provided an interface to configure the app using the REST API. 
+
+Some issues were found regarding the interface of the ChiSquaredTest class. The
+tester recommended simplifying the interface to make it more user-friendly. 
+The naming of the methods must also be improved. The tester recommended 
+renaming the methods to make them more intuitive (e.g. `calc()` instead of
+`calculate()` or `test()`).
+
+This opens a new conceptional question about the design. Shall we consider 
+using method chaining for methods that initialize the internal state and 
+then just access the internal state using properties? Are there best practices
+for this kind of design?
+
+### 14. Refactor the backend after the feedback
+
+* We will refactor the ChiSquaredTest class to make it more user-friendly. 
+* We will rename the test() method to calc() and remove some methods
+* We need to replace `is fair` with `is null`
+
+
+Snapshot of the Randomgen classes API at this stage:
+
+```python
+from randomgen.core import RandomGenV1
+
+# Create a random number generator
+rg = (
+   RandomGenV1()
+   .set_numbers([-1, 0, 1, 2, 3])
+   .set_expected_probabilities([0.01, 0.3, 0.58, 0.1, 0.01])
+   .validate()
+)
+
+# Get a random number
+num = rg.next_num()
+print("Random number is: ", num)
+```
+
+Snapshot of the ChiSquaredTest API:
+
+```
+from randomgen.hypothesis import ChiSquareTest
+
+# Create a hypothesis test
+hypothesis = (
+  ChiSquareTest()
+  .set_observed_numbers([1, 1, 2, 2, 3, 3, 4, 4, 5, 5])
+  .set_expected_probabilities([0.01, 0.3, 0.58, 0.1, 0.01])
+  .validate()
+  .calc()
+)
+
+# Null hypothesis means both distributions are similar (no effect found).
+# In our case the difference between the observed and expected distribution
+# is not significant (we fit the expected distribution).
+
+print("Hypothesis is: ", hypothesis.is_null())
+```
+
+Snapshot of the Histogram API:
+
+```
+from randomgen.helpers import Histogram
+
+# Create a histogram object
+histogram = (
+     Histogram()
+     .set_numbers(random_numbers)
+     .validate()
+     .calc()
+)
+ 
+# Print the histogram
+print(hist)
+print(hist.from_dict(dict(zip([-1, 0, 1, 2, 3], [0.01, 0.3, 0.58, 0.1, 0.01])))
+```
 
 ### . Prepare the project distribution
 

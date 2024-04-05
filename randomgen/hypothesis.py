@@ -24,11 +24,15 @@ class HypothesisTestAbc(metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def validate_probabilities(self):
+    def validate_expected_probabilities(self):
         raise NotImplementedError
 
     @abstractmethod
-    def test(self, alpha=0.05):
+    def validate(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def calc(self, alpha=0.05):
         raise NotImplementedError
 
 
@@ -99,7 +103,7 @@ class ChiSquareTest(HypothesisTestAbc):
         self.probabilities = probabilities
         return self
 
-    def validate_probabilities(self):
+    def validate_expected_probabilities(self):
 
         if self.probabilities is None:
             raise RandomGenTypeError()
@@ -119,7 +123,12 @@ class ChiSquareTest(HypothesisTestAbc):
 
         return self
 
-    def test(self, alpha=0.05):
+    def validate(self):
+        self.validate_observed_numbers()
+        self.validate_expected_probabilities()
+        return self
+
+    def calc(self, alpha=0.05):
         """ Perform the chi-square test for the given significance level
 
         It tells us how likely it is that the null hypothesis is true. The
@@ -179,6 +188,10 @@ class ChiSquareTest(HypothesisTestAbc):
         # Calculate the p-value that corresponds to the chi-square value
         self.p_value = 1 - chi2.cdf(self.chi_square, self.df)
 
+        return self
+
+    def is_null(self, alpha=0.05):
+
         # Scipy/Numpy hijacks bool somehow, and it becomes a bool_ object.
         # Unfortunately, this causes some problems when comparing the result
         # using the is operator (e.g bool(0.05) is False).
@@ -199,7 +212,7 @@ if __name__ == "__main__":
         ChiSquareTest()
         .set_observed_numbers(nums)
         .set_expected_probabilities(probs)
-        .test()
+        .calc()
     )
 
     print("Hypothesis is: ", hypothesis)
@@ -212,7 +225,7 @@ if __name__ == "__main__":
         ChiSquareTest()
         .set_observed_numbers(nums)
         .set_expected_probabilities(probs)
-        .test()
+        .calc()
     )
 
     print("Hypothesis is: ", hypothesis)
