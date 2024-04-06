@@ -36,5 +36,7 @@ jobs:
         with:
           image: braboj/randomgen
           registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           addLatest: true
           pushImage: true
