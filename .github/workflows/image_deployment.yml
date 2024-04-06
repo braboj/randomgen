@@ -32,7 +32,7 @@ jobs:
           images: braboj/randomgen
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v6.4
+        uses: mr-smithers-excellent/docker-build-push@v6.4
         with:
           context: .
           file: ./Dockerfile
