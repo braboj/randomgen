@@ -447,6 +447,37 @@ Considerations:
 - The application will run on port 8080
 - The application is not exposed to the internet (no need for HTTPS)
 
+```Dockerfile
+FROM python:3.12.2-alpine3.19@sha256:c7eb5c92b7933fe52f224a91a1ced27b91840ac9c69c58bef40d602156bcdb41
+
+WORKDIR ./app
+
+COPY ./randomgen ./randomgen
+COPY app.py .
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
+EXPOSE 8080
+
+CMD python -m flask run -h '0.0.0.0' -p 8080
+```
+
+Unfortunately, the image is still too large. The layer with the `pip 
+install` command is the largest one. We will use multi-stage builds to 
+optimize the image size in the next iteration.
+
+### 17. Create the CI/CD pipeline
+
+We will create a GitHub Actions workflow to run the tests on every push to the
+main branch. We will also create a GitHub Actions workflow to build and push the
+Docker image to Docker Hub on every release.
+
+What we want:
+
+1. Run the tests on every push to the main branch.
+2. Create a release on every tag.
+3. Build and push the Docker image to Docker Hub on every release.
+4. Build the documentation and deploy it to GitHub Pages on every release.
 
 ### . Documentation
 
@@ -460,19 +491,6 @@ sections:
 4. Rest API
 5. CONTRIBUTING.md
 6. README.md
-
-### . Create CI/CD pipeline
-
-We will create a GitHub Actions workflow to run the tests on every push to the
-main branch. We will also create a GitHub Actions workflow to build and push the
-Docker image to Docker Hub on every release.
-
-What we want:
-
-1. Run the tests on every push to the main branch.
-2. Create a release on every tag.
-3. Build and push the Docker image to Docker Hub on every release.
-4. Build the documentation and deploy it to GitHub Pages on every release.
 
 ### . Tag the first increment
 
