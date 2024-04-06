@@ -469,7 +469,7 @@ Unfortunately, the image is still too large. The layer with the `pip
 install` command is the largest one. We will use multi-stage builds to 
 optimize the image size in the next iteration.
 
-### 17. Create the CI/CD pipeline
+### . Create the CI/CD pipeline
 
 We will create a GitHub Actions workflow to run the tests on every push to the
 main branch. We will also create a GitHub Actions workflow to build and push the
@@ -477,9 +477,8 @@ Docker image to Docker Hub on every release.
 
 What we want:
 
-1. Run the tests on every push to the main branch.
-2. Create a release on every tag.
-3. Build and push the Docker image to Docker Hub on every release.
+1. Run the tests on every push to the main branch. [+]
+3. Build and push the Docker image to Docker Hub on each push [+]
 4. Build the documentation and deploy it to GitHub Pages on every release.
 
 ### . Documentation
