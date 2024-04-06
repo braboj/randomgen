@@ -423,12 +423,13 @@ print(hist.from_dict(dict(zip([-1, 0, 1, 2, 3], [0.01, 0.3, 0.58, 0.1, 0.01])))
 After the changes, the unittests showed that the solution is working as 
 expected. The server was also tested manually and the results were as expected.
 
-### . Docstrings
+### 15. Docstrings
 
 Now it is time to add docstrings to the classes and methods. We will use the
-Google docstring format. 
+Google docstring format. The docstrings will be used to generate the API 
+manual.
 
-### . Containerize the solution
+### 16. Containerize the solution
 
 We will distribute the solution as a container. The application will consist 
 of a flask server that will implement a simple API to access the random 
@@ -437,11 +438,13 @@ machine that has Docker installed.
 
 Considerations:
 
-- No multi-stage build is needed as it is a demo application
-- No Docker compose needed as it is a single container application
-- Choose a base image that is small and secure
+- No dockerfile optimizations (e.g. multi-stage builds)
+- No memory or cpu limits (with docker compose)
+- No persistent storage required 
+- Choose a base image that is small and secure (e.g. alpine)
 - Use a `.dockerignore` file to exclude unnecessary files
-- Use environment variables to configure the application
+- Use digests to guarantee the integrity of the image
+- The application will run on port 8080
 - The application is not exposed to the internet (no need for HTTPS)
 
 
@@ -455,6 +458,8 @@ sections:
 2. Solution
 3. Installation
 4. Rest API
+5. CONTRIBUTING.md
+6. README.md
 
 ### . Create CI/CD pipeline
 
@@ -468,8 +473,6 @@ What we want:
 2. Create a release on every tag.
 3. Build and push the Docker image to Docker Hub on every release.
 4. Build the documentation and deploy it to GitHub Pages on every release.
-
-### . Create the CONTRIBUTING guideline
 
 ### . Tag the first increment
 
