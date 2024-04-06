@@ -35,5 +35,6 @@ jobs:
         uses: mr-smithers-excellent/docker-build-push@v6.4
         with:
           image: braboj/randomgen
+          registry: docker.io
           addLatest: true
           pushImage: true
