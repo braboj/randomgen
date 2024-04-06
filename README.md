@@ -1,5 +1,5 @@
-[![Application tests](https://github.com/braboj/randomgen/actions/workflows/python-app.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/python-app.yml)
-[![Publish Docker image](https://github.com/braboj/randomgen/actions/workflows/main.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/main.yml)
+[![Tests](https://github.com/braboj/randomgen/actions/workflows/application_tests.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/application_tests.yml)
+[![Deployment](https://github.com/braboj/randomgen/actions/workflows/image_deployment.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/image_deployment.yml)
 
 ## Problem Statement
 
