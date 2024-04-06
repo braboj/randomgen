@@ -1,3 +1,5 @@
+[![Application tests](https://github.com/braboj/randomgen/actions/workflows/python-app.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/python-app.yml)
+
 ## Problem Statement
 
 ### Description
