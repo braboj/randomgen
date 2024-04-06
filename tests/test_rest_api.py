@@ -12,23 +12,29 @@ import threading
 
 
 @pytest.fixture(autouse=True, scope='module')
-def run_app():
+def webserver():
+    """Run the web server as a background thread."""
+
     app = RandomNumberGeneratorApp()
-    webserver = threading.Thread(target=app.run)
-    webserver.daemon = True
-    webserver.start()
-    yield webserver
+    app = threading.Thread(target=app.run)
+    app.daemon = True
+    app.start()
+    yield app
 
 
 ###############################################################################
 
 class TestRestApiIntegration(object):
+    """Test the REST API endpoints."""
 
     @classmethod
     def setup_class(cls):
+        """Set up the base URL."""
+
         cls.base_url = 'http://127.0.0.1:5000'
 
     def test_endpoint_api_v1_randomgen_pos(self):
+        """Test the /api/v1/randomgen endpoint with positive numbers."""
 
         # Endpoint URL
         url = self.base_url + '/api/v1/randomgen'
@@ -44,6 +50,7 @@ class TestRestApiIntegration(object):
             assert response.status_code == 200
 
     def test_endpoint_api_v1_randomgen_neg(self):
+        """Test the /api/v1/randomgen endpoint with negative numbers."""
 
         # Endpoint URL
         url = self.base_url + '/api/v1/randomgen'
@@ -59,6 +66,7 @@ class TestRestApiIntegration(object):
             assert response.status_code == 400
 
     def test_endpoint_api_v2_randomgen_pos(self):
+        """Test the /api/v2/randomgen endpoint with positive numbers."""
 
         # Endpoint URL
         url = self.base_url + '/api/v2/randomgen'
@@ -74,6 +82,7 @@ class TestRestApiIntegration(object):
             assert response.status_code == 200
 
     def test_endpoint_api_v2_randomgen_neg(self):
+        """Test the /api/v2/randomgen endpoint with negative numbers."""
 
         # Endpoint URL
         url = self.base_url + '/api/v2/randomgen'
@@ -89,6 +98,7 @@ class TestRestApiIntegration(object):
             assert response.status_code == 400
 
     def test_endpoint_api_config(self):
+        """Test the /api/config endpoint."""
 
         # Endpoint URL
         url = self.base_url + '/api/config'
@@ -112,7 +122,8 @@ class TestRestApiIntegration(object):
         # Check the response
         assert response.status_code == 200
 
-    def test_endpoint_api_reset(self, run_app):
+    def test_endpoint_api_reset(self, webserver):
+        """Test the /api/reset endpoint."""
 
         # Change the configuration
         url = self.base_url + '/api/config'
