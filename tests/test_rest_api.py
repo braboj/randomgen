@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-from randomgen.app import (
+from randomgen.webserver import (
     RandomNumberGeneratorApp,
     DEFAULT_NUMBERS,
     DEFAULT_PROBABILITIES
@@ -9,6 +9,7 @@ from randomgen.app import (
 import pytest
 import requests
 import threading
+
 
 @pytest.fixture(autouse=True, scope='module')
 def run_app():
@@ -33,7 +34,6 @@ class TestRestApiIntegration(object):
         url = self.base_url + '/api/v1/randomgen'
 
         for num in (1, 1000, 10000):
-
             # Query parameters
             params = {'numbers': num}
 
@@ -48,8 +48,7 @@ class TestRestApiIntegration(object):
         # Endpoint URL
         url = self.base_url + '/api/v1/randomgen'
 
-        for num in (-1, 0, 10001, ):
-
+        for num in (-1, 0, 10001,):
             # Query parameters
             params = {'numbers': num}
 
@@ -65,7 +64,6 @@ class TestRestApiIntegration(object):
         url = self.base_url + '/api/v2/randomgen'
 
         for num in (1, 10000):
-
             # Query parameters
             params = {'numbers': num}
 
@@ -80,8 +78,7 @@ class TestRestApiIntegration(object):
         # Endpoint URL
         url = self.base_url + '/api/v2/randomgen'
 
-        for num in (-1, 0, 10001, ):
-
+        for num in (-1, 0, 10001,):
             # Query parameters
             params = {'numbers': num}
 
