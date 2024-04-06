@@ -9,7 +9,7 @@ from randomgen.histogram import Histogram
 ###############################################################################
 
 app = Flask(__name__)
-app.bins = [-1, 0, 1, 2, 3]
+app.numbers = [-1, 0, 1, 2, 3]
 app.probabilities = [0.01, 0.3, 0.58, 0.1, 0.01]
 app.max_numbers = 10000
 
@@ -27,7 +27,7 @@ def generate_random_numbers(randomgen, amount, version=1):
     random_numbers = [randomgen.next_num() for _ in range(amount)]
 
     # Expected distribution
-    expected = dict(zip(app.bins, app.probabilities))
+    expected = dict(zip(app.numbers, app.probabilities))
 
     # Observed distribution
     observed = (
@@ -53,7 +53,7 @@ def generate_random_numbers(randomgen, amount, version=1):
         "quality": {
             "chi_square_test":
                 {
-                    'is_fair': int(hypothesis.is_null()),
+                    'is_null': int(hypothesis.is_null()),
                     'chi_square': hypothesis.chi_square,
                     'p_value': hypothesis.p_value,
                     'df': hypothesis.df,
@@ -112,9 +112,9 @@ def hello_world():
 
 @app.post('/api/config')
 def api_config():
-    app.numbers = request.json['bins']
+    app.numbers = request.json['numbers']
     app.probabilities = request.json['probabilities']
-    return jsonify({'bins': app.numbers, 'probabilities': app.probabilities})
+    return jsonify({'numbers': app.numbers, 'probabilities': app.probabilities})
 
 
 # A route to get the configuration of the random number generator
@@ -128,7 +128,7 @@ def api_v1_generate_numbers():
     # Generate random numbers from -1 to 3 using a custom distribution
     rg = (
         RandomGenV1()
-        .set_numbers(app.bins)
+        .set_numbers(app.numbers)
         .set_probabilities(app.probabilities)
         .validate()
     )
@@ -146,7 +146,7 @@ def api_v2_generate_numbers():
     # Create the random number generator object
     rg = (
         RandomGenV2()
-        .set_numbers(app.bins)
+        .set_numbers(app.numbers)
         .set_probabilities(app.probabilities)
         .validate()
     )
