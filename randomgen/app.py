@@ -3,6 +3,10 @@ from randomgen.core import RandomGenV1, RandomGenV2
 from randomgen.hypothesis import ChiSquareTest
 from randomgen.histogram import Histogram
 
+DEFAULT_NUMBERS = [-1, 0, 1, 2, 3]
+DEFAULT_PROBABILITIES = [0.01, 0.3, 0.58, 0.1, 0.01]
+MAX_NUMBERS = 10000
+
 
 class RandomNumberGeneratorApp(object):
     """Random Number Generator REST API.
@@ -40,17 +44,22 @@ class RandomNumberGeneratorApp(object):
     def setup_config(self):
         """ Configure the Flask application using the default values. """
 
-        self.app.config['MAX_NUMBERS'] = 10000
-        self.app.config['NUMBERS'] = [-1, 0, 1, 2, 3]
-        self.app.config['PROBABILITIES'] = [0.01, 0.3, 0.58, 0.1, 0.01]
+        self.app.config['MAX_NUMBERS'] = MAX_NUMBERS
+        self.app.config['NUMBERS'] = DEFAULT_NUMBERS
+        self.app.config['PROBABILITIES'] = DEFAULT_PROBABILITIES
 
     def generate_random_numbers(self, randomgen, amount):
         """ Generate random numbers using the given random number generator. """
 
-        # Check if the amount is within the limits
-        if amount > self.app.config['MAX_NUMBERS']:
+        # Check if the amount is negative or zero
+        if amount <= 0:
             return jsonify(
-                {'error': 'Amount of numbers cannot exceed 1000'}), 400
+                {'error': 'Amount of numbers must be greater than 0'}), 400
+
+        # Check if the amount exceeds the maximum limit
+        elif amount > self.app.config['MAX_NUMBERS']:
+            return jsonify(
+                {'error': f'Numbers cannot exceed {MAX_NUMBERS}'}), 400
 
         # Generate random numbers
         random_numbers = [randomgen.next_num() for _ in range(amount)]
@@ -94,6 +103,35 @@ class RandomNumberGeneratorApp(object):
         # Return the response
         return jsonify(response)
 
+    @staticmethod
+    def home_endpoint():
+        """ Home endpoint. """
+
+        body = (
+            """
+            <h1>Random Number Generator API</h1>
+
+            Author: Branimir Georgiev
+
+            <p>
+            The fairness of the random number generator is tested using the 
+            Chi-Square test. Larger numbers of generated random numbers will 
+            result in a more accurate test.
+            </p>
+
+            <p>Endpoints:</p>
+
+            <ul>
+                <li> GET /api/v1/randomgen?numbers=1000 </li>
+                <li> GET /api/v2/randomgen?numbers=1000 </li>
+                <li> POST /api/config (see documentation) </li>
+            </ul>
+
+            """
+        )
+
+        return body
+
     def randomgen_endpoint(self, randomgen_version):
         """ Generate random numbers using the given version of RandomGen. """
 
@@ -122,12 +160,22 @@ class RandomNumberGeneratorApp(object):
             'probabilities': self.app.config['PROBABILITIES']}
         )
 
+    def reset_endpoint(self):
+        """ Reset the configuration to the default values. """
+
+        self.setup_config()
+
+        return jsonify({
+            'numbers': self.app.config['NUMBERS'],
+            'probabilities': self.app.config['PROBABILITIES']}
+        )
+
     def register_routes(self):
         """ Register the routes for the API. """
 
         @self.app.route('/')
         def hello_world():
-            return "<h1>Welcome to the Random Number Generator API</h1>"
+            return self.home_endpoint()
 
         @self.app.get('/api/v1/randomgen')
         def api_v1():
@@ -140,6 +188,10 @@ class RandomNumberGeneratorApp(object):
         @self.app.post('/api/config')
         def api_config():
             return self.config_endpoint()
+
+        @self.app.get('/api/reset')
+        def api_reset():
+            return self.reset_endpoint()
 
         @self.app.errorhandler(Exception)
         def handle_error(e):
