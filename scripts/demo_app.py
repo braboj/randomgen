@@ -3,7 +3,6 @@ from randomgen.hypothesis import ChiSquareTest
 from flask import Flask, jsonify, request
 from randomgen.histogram import Histogram
 
-
 ###############################################################################
 # Application
 ###############################################################################
@@ -18,10 +17,25 @@ app.max_numbers = 10000
 # Helpers
 ###############################################################################
 
-def generate_random_numbers(randomgen, amount, version=1):
+def generate_random_numbers(randomgen, amount):
+    """ Generate random numbers using the given random number generator.
+
+    Args:
+        randomgen: The random number generator object.
+        amount: The number of random numbers to generate.
+
+    Returns:
+        dict: A dictionary containing the generated random numbers and the
+        results of the Chi-Square test.
+    """
+
+    # Check if the number of items to be generated is positive
+    if amount <= 0:
+        return jsonify({'error': 'Quantity must be greater than 0'})
+
     # Check if the number of items to be generated is within the limit
-    if amount > app.max_numbers:
-        return jsonify({'error': 'Amount of numbers cannot exceed 1000'})
+    elif amount > app.max_numbers:
+        return jsonify({'error': 'Quantity cannot exceed {app.max_numbers}'})
 
     # Generate random numbers
     random_numbers = [randomgen.next_num() for _ in range(amount)]
@@ -46,12 +60,9 @@ def generate_random_numbers(randomgen, amount, version=1):
 
     # Prepare the response
     response = {
-
-        'version': version,
         'numbers': random_numbers,
-
-        "quality": {
-            "chi_square_test":
+        'quality': {
+            'chi_square_test':
                 {
                     'is_null': int(hypothesis.is_null()),
                     'chi_square': hypothesis.chi_square,
@@ -65,7 +76,7 @@ def generate_random_numbers(randomgen, amount, version=1):
     }
 
     # Return the response
-    return jsonify(response)
+    return response
 
 
 ###############################################################################
@@ -87,23 +98,24 @@ def hello_world():
     body = (
         """
         <h1>Random Number Generator API</h1>
-        
+
         Author: Branimir Georgiev
-        
+
         <p>
         The fairness of the random number generator is tested using the 
         Chi-Square test. Larger numbers of generated random numbers will 
         result in a more accurate test.
         </p>
-        
+
         <p>Endpoints:</p>
-        
+
         <ul>
-            <li> GET /api/v1/randomgen?numbers=1000 </li>
-            <li> GET /api/v2/randomgen?numbers=1000 </li>
-            <li> POST /api/config (see documentation) </li>
+            <li> GET    /api/v1/randomgen?numbers=1000 </li>
+            <li> GET    /api/v2/randomgen?numbers=1000 </li>
+            <li> POST   /api/config {numbers, probabilities} </li>
+            <li> POST   /api/reset </li>
         </ul>
-    
+
         """
     )
 
@@ -133,7 +145,10 @@ def api_v1_generate_numbers():
         .validate()
     )
 
-    return generate_random_numbers(rg, amount, version=1)
+    response = generate_random_numbers(rg, amount)
+    response['version'] = 1
+
+    return jsonify(response)
 
 
 @app.get('/api/v2/randomgen')
@@ -151,7 +166,10 @@ def api_v2_generate_numbers():
         .validate()
     )
 
-    return generate_random_numbers(rg, amount, version=2)
+    response = generate_random_numbers(rg, amount)
+    response['version'] = 2
+
+    return jsonify(response)
 
 
 if __name__ == '__main__':

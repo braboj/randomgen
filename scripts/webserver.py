@@ -8,7 +8,7 @@ DEFAULT_PROBABILITIES = [0.01, 0.3, 0.58, 0.1, 0.01]
 MAX_NUMBERS = 10000
 
 
-class RandomNumberGeneratorApp(object):
+class RandomGeneratorApp(Flask):
     """Random Number Generator REST API.
 
     This class wraps the Flask application and provides a REST API for
@@ -17,25 +17,23 @@ class RandomNumberGeneratorApp(object):
     probabilities used for generating random numbers.
 
     Attributes:
-        app: The Flask application.
+
         debug: A boolean flag to enable or disable debugging.
 
     Endpoints:
     - GET /api/v1/randomgen: Generate random numbers using RandomGenV1.
     - GET /api/v2/randomgen: Generate random numbers using RandomGenV2.
     - /api/config: Configure the numbers and probabilities.
+    - /api/reset: Reset the configuration to the default values.
 
     """
 
     def __init__(self, debug=False):
 
         # Create the Flask application
-        self.app = Flask(__name__)
+        super().__init__("randomgen")
 
-        # Set the debug flag
-        self.debug = debug
-
-        # Setup the configuration
+        # Set the configuration
         self.setup_config()
 
         # Register the routes
@@ -44,9 +42,9 @@ class RandomNumberGeneratorApp(object):
     def setup_config(self):
         """ Configure the Flask application using the default values. """
 
-        self.app.config['MAX_NUMBERS'] = MAX_NUMBERS
-        self.app.config['NUMBERS'] = DEFAULT_NUMBERS
-        self.app.config['PROBABILITIES'] = DEFAULT_PROBABILITIES
+        self.config['MAX_NUMBERS'] = MAX_NUMBERS
+        self.config['NUMBERS'] = DEFAULT_NUMBERS
+        self.config['PROBABILITIES'] = DEFAULT_PROBABILITIES
 
     def generate_random_numbers(self, randomgen, amount):
         """ Generate random numbers using the given random number generator. """
@@ -57,7 +55,7 @@ class RandomNumberGeneratorApp(object):
                 {'error': 'Amount of numbers must be greater than 0'}), 400
 
         # Check if the amount exceeds the maximum limit
-        elif amount > self.app.config['MAX_NUMBERS']:
+        elif amount > self.config['MAX_NUMBERS']:
             return jsonify(
                 {'error': f'Numbers cannot exceed {MAX_NUMBERS}'}), 400
 
@@ -66,8 +64,8 @@ class RandomNumberGeneratorApp(object):
 
         # Expected distribution
         expected = dict(zip(
-                self.app.config['NUMBERS'],
-                self.app.config['PROBABILITIES'])
+            self.config['NUMBERS'],
+            self.config['PROBABILITIES'])
         )
 
         # Observed distribution
@@ -81,7 +79,7 @@ class RandomNumberGeneratorApp(object):
         hypothesis = (
             ChiSquareTest()
             .set_observed_numbers(random_numbers)
-            .set_expected_probabilities(self.app.config['PROBABILITIES'])
+            .set_expected_probabilities(self.config['PROBABILITIES'])
             .calc()
         )
 
@@ -124,7 +122,8 @@ class RandomNumberGeneratorApp(object):
             <ul>
                 <li> GET /api/v1/randomgen?numbers=1000 </li>
                 <li> GET /api/v2/randomgen?numbers=1000 </li>
-                <li> POST /api/config (see documentation) </li>
+                <li> POST /api/config {"numbers":[1, 2], "probabilities":[0.5, 0.5]}</li>
+                <li> POST /api/reset </li>
             </ul>
 
             """
@@ -140,11 +139,11 @@ class RandomNumberGeneratorApp(object):
 
         # Create the random number generator
         rg = (
-                randomgen_version()
-                .set_numbers(self.app.config['NUMBERS'])
-                .set_probabilities(self.app.config['PROBABILITIES'])
-                .validate()
-            )
+            randomgen_version()
+            .set_numbers(self.config['NUMBERS'])
+            .set_probabilities(self.config['PROBABILITIES'])
+            .validate()
+        )
 
         # Generate random numbers
         return self.generate_random_numbers(rg, amount)
@@ -152,12 +151,12 @@ class RandomNumberGeneratorApp(object):
     def config_endpoint(self):
         """ Configure the numbers and probabilities. """
 
-        self.app.config['NUMBERS'] = request.json['numbers']
-        self.app.config['PROBABILITIES'] = request.json['probabilities']
+        self.config['NUMBERS'] = request.json['numbers']
+        self.config['PROBABILITIES'] = request.json['probabilities']
 
         return jsonify({
-            'numbers': self.app.config['NUMBERS'],
-            'probabilities': self.app.config['PROBABILITIES']}
+            'numbers': self.config['NUMBERS'],
+            'probabilities': self.config['PROBABILITIES']}
         )
 
     def reset_endpoint(self):
@@ -166,42 +165,33 @@ class RandomNumberGeneratorApp(object):
         self.setup_config()
 
         return jsonify({
-            'numbers': self.app.config['NUMBERS'],
-            'probabilities': self.app.config['PROBABILITIES']}
+            'numbers': self.config['NUMBERS'],
+            'probabilities': self.config['PROBABILITIES']}
         )
 
     def register_routes(self):
         """ Register the routes for the API. """
 
-        @self.app.route('/')
+        @self.route('/')
         def hello_world():
             return self.home_endpoint()
 
-        @self.app.get('/api/v1/randomgen')
+        @self.get('/api/v1/randomgen')
         def api_v1():
             return self.randomgen_endpoint(randomgen_version=RandomGenV1)
 
-        @self.app.get('/api/v2/randomgen')
+        @self.get('/api/v2/randomgen')
         def api_v2():
             return self.randomgen_endpoint(randomgen_version=RandomGenV2)
 
-        @self.app.post('/api/config')
+        @self.post('/api/config')
         def api_config():
             return self.config_endpoint()
 
-        @self.app.get('/api/reset')
+        @self.get('/api/reset')
         def api_reset():
             return self.reset_endpoint()
 
-        @self.app.errorhandler(Exception)
+        @self.errorhandler(Exception)
         def handle_error(e):
             return jsonify({'error': str(e)}), 500
-
-    def run(self, host='127.0.0.1', port=5000):
-        """ Run the Flask application. """
-        self.app.run(debug=self.debug, host=host, port=port)
-
-
-if __name__ == '__main__':
-    rng_app = RandomNumberGeneratorApp(debug=True)
-    rng_app.run()

@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-from randomgen.webserver import (
-    RandomNumberGeneratorApp,
+from scripts.webserver import (
+    RandomGeneratorApp,
     DEFAULT_NUMBERS,
     DEFAULT_PROBABILITIES
 )
@@ -15,7 +15,7 @@ import threading
 def webserver():
     """Run the web server as a background thread."""
 
-    app = RandomNumberGeneratorApp()
+    app = RandomGeneratorApp()
     app = threading.Thread(target=app.run)
     app.daemon = True
     app.start()
