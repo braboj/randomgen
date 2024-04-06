@@ -45,6 +45,16 @@ class RandomGenABC(metaclass=ABCMeta):
 
         return self
 
+    def to_dict(self):
+        """Return the numbers and probabilities as a dictionary.
+
+        Returns:
+            A dictionary of numbers and respective probabilities.
+
+        """
+
+        return dict(zip(self._numbers, self._probabilities))
+
     def set_numbers(self, values):
         """Set the numbers (similar to the categories in a histogram).
 
@@ -245,7 +255,7 @@ if __name__ == "__main__":
     )
 
     # Expected distribution
-    expected = dict(zip(rg._numbers, rg._probabilities))
+    expected = rg.to_dict()
     print("Expected distribution:", expected)
 
     # Observed distribution
