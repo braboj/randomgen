@@ -2,6 +2,9 @@
 
 ## GET /api/v1/randomgen
 
+Generate random numbers based on the probabilities defined in the configuration.
+This endpoint uses the `RandomGenV1` class to generate the random numbers.
+
 ### Attributes
 
 | Attribute | Type | Required | Description                  |
@@ -79,6 +82,9 @@ RawContentLength  : 423
 ```
 
 ## GET /api/v2/randomgen
+
+Generate random numbers based on the probabilities defined in the configuration.
+This endpoint uses the `RandomGenV2` class to generate the random numbers.
 
 ### Attributes
 
@@ -158,6 +164,9 @@ RawContentLength  : 423
 
 ## POST /api/config
 
+Configure the random number generator with a custom distribution. The 
+distribution is defined by the random numbers and their probabilities.
+
 ### Attributes
 
 | Attribute       | Type | Required | Description                             |
@@ -212,11 +221,17 @@ RawContentLength  : 50
 
 ## POST /api/reset
 
+Reset to the default configuration of the random numbers and probabilities.
+
+### Attributes
+None
+
 ### Response
 
 ```json
 {
-  "message": "The configuration has been reset."
+  "numbers": [-1, 0, 1, 2, 3],
+  "probabilities": [0.01, 0.3, 0.58, 0.1, 0.01]
 }
 ```
 
