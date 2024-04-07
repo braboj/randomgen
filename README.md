@@ -34,5 +34,5 @@ http://localhost:8080/api/v1/randomgen?numbers=100
 
 ## Next Steps
  - For more information, you can check the [RandomGen Project Pages]().
- - To contribute, please visit the [Contributing](CONTRIUB) page
- - To leave feedback, please visit the [Discussions](https://github.com/braboj/randomgen/discussions/landing) page
+ - To contribute, please visit the [Contributing](CONTRIBUTING.md)
+ - To leave feedback, please visit the [Discussions](https://github.com/braboj/randomgen/discussions/landing)
