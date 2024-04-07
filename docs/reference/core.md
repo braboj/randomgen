@@ -14,16 +14,17 @@ Abstract base class for random number generators.
 Set the numbers and probabilities from a dictionary.
 
 Args:
+
 - dict_obj: A dictionary of numbers and probabilities.
 
-Returns:
-- self: The instance of the class.
+Returns: self: The instance of the class.
 
 ### to_dict()
 
 Return the numbers and probabilities as a dictionary.
 
 Returns:
+
 - A dictionary of numbers and respective probabilities.
 
 ### set_numbers()
@@ -31,9 +32,11 @@ Returns:
 Set the numbers (similar to the categories in a histogram).
 
 Args:
+
 - values: A list of numbers.
 
 Returns:
+
 - self: The instance of the class.
 
 ### validate_numbers()
@@ -41,6 +44,7 @@ Returns:
 Validate the numbers.
 
 Returns:
+
 - self: The instance of the class.
 
 ### set_probabilities()
@@ -48,9 +52,11 @@ Returns:
 Set the probabilities.
 
 Args:
+
 - values: A list of probabilities.
 
 Returns:
+
 - self: The instance of the class.
 
 ### validate_probabilities()
@@ -58,6 +64,7 @@ Returns:
 Validate the probabilities.
 
 Returns:
+
 - self: The instance of the class.
 
 ### calc_cdf()
@@ -65,6 +72,7 @@ Returns:
 Calculate the cumulative probabilities.
 
 Returns:
+
 - self: The instance of the class.
 
 ### validate()
@@ -72,6 +80,7 @@ Returns:
 Validate all the attributes of the class.
 
 Returns:
+
 - self: The instance of the class.
 
 ### generate()
@@ -79,9 +88,11 @@ Returns:
 Generate random numbers based on the probabilities.
 
 Args:
+
 - amount: The number of random numbers to generate.
 
 Returns:
+
 - A list of random numbers.
 
 ### next_num()
@@ -89,6 +100,7 @@ Returns:
 Abstract method to generate the next random number.
 
 Returns:
+
 - A random number.
 
 
@@ -102,6 +114,7 @@ the `next_num()` method using the random.random() function.
 Generate a random number using the random.random() function.
 
 Returns:
+
 - A random number.
 
 ## RandomGenV2
@@ -114,4 +127,5 @@ the `next_num()` method using the random.random() function.
 Generate a random number using the random.random() function.
 
 Returns:
+
 - A random number.

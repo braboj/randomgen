@@ -11,6 +11,7 @@ using the Flask framework.
 Route for the default home page.
 
 Returns:
+
 - str: The home page message.
 
 ## api_v1_randomgen()
@@ -20,6 +21,7 @@ Returns:
 Route for the /api/v1/randomgen endpoint.
 
 Returns:
+
 - flask.Response: The response from the randomgen endpoint.
 
 ## api_v2_randomgen()
@@ -29,6 +31,7 @@ Returns:
 Route for the /api/v2/randomgen endpoint.
 
 Returns:
+
 - flask.Response: The response from the randomgen endpoint.
 
 ## api_config()
@@ -38,6 +41,7 @@ Returns:
 Route for the /api/config endpoint.
 
 Returns:
+
 - flask.Response: The response from the config endpoint.
 
 ## api_reset()
@@ -47,6 +51,7 @@ Returns:
 Route for the /api/reset endpoint.
 
 Returns:
+
 - flask.Response: The response from the reset endpoint.
 
 ## handle_error()
@@ -56,5 +61,6 @@ Returns:
 Error handler for the application.
 
 Returns:
+
 - flask.Response: The error response.
 

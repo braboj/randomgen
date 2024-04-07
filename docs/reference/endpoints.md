@@ -22,10 +22,12 @@ Returns:
 Generate random numbers using the given random number generator.
 
 Args:
+
 - randomgen: The random number generator object.
 - quantity: The quantity of random numbers to generate.
 
 Returns:
+
 - dict: A dictionary containing the generated random numbers and the
 - results of the Chi-Square test.
 
@@ -34,6 +36,7 @@ Returns:
 Return the HTML body of the home page. This is the default page of the API.
 
 Returns:
+
 - str: The HTML body of the home page.
 
 ### randomgen_endpoint()
@@ -41,10 +44,12 @@ Returns:
 Generate random numbers using the given version of RandomGen.
 
 Args:
+
 - randomgen_type: The concrete class of RandomGen to use.
 - numbers: The quantity of random numbers to generate.
 
 Returns:
+
 - dict: A dictionary containing the generated random numbers and the
 - results of the Chi-Square test.
 
@@ -53,6 +58,7 @@ Returns:
 Configure the numbers and probabilities.
 
 Returns:
+
 - dict: A dictionary containing the new numbers and probabilities.
 
 ### reset_endpoint()
@@ -60,5 +66,6 @@ Returns:
 Reset the configuration to the default values.
 
 Returns:
+
 - dict: A dictionary containing the default numbers and probabilities.
 

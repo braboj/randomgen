@@ -9,9 +9,11 @@ Abstract base class for hypothesis tests.
 Set the observed random numbers.
 
 Args:
+
 - values: A list of random numbers.
 
 Returns:
+
 - self: The instance of the class.
 
 ### validate_observed_numbers()
@@ -19,6 +21,7 @@ Returns:
 Validate the observed random numbers.
 
 Returns:
+
 - self: The instance of the class.
 
 ### set_expected_probabilities()
@@ -26,9 +29,11 @@ Returns:
 Set the expected probabilities.
 
 Args:
+
 - values: A list of probabilities.
 
 Returns:
+
 - self: The instance of the class.
 
 ### validate_expected_probabilities()
@@ -36,6 +41,7 @@ Returns:
 Validate the expected probabilities.
 
 Returns:
+
 - self: The instance of the class.
 
 ### validate()
@@ -43,6 +49,7 @@ Returns:
 Validate the observed random numbers and expected probabilities.
 
 Returns:
+
 - self: The instance of the class.
 
 ### calc()
@@ -50,6 +57,7 @@ Returns:
 Perform the hypothesis test.
 
 Returns:
+
 - self: The instance of the class.
 
 ### is_null()
@@ -57,9 +65,11 @@ Returns:
 Check if the null hypothesis is true.
 
 Args:
+
 - alpha: The significance level.
 
 Returns:
+
 - bool: True if the null hypothesis is true, False otherwise.
 
 ## ChiSquareTest
@@ -95,9 +105,11 @@ No description available.
 Set the observed random numbers.
 
 Args:
+
 - values: A list of random numbers.
 
 Returns:
+
 - self: The instance of the class.
 
 ### validate_observed_numbers()
@@ -105,6 +117,7 @@ Returns:
 Validate the observed random numbers.
 
 Returns:
+
 - self: The instance of the class.
 
 ### set_expected_probabilities()
@@ -112,9 +125,11 @@ Returns:
 Set the expected probabilities.
 
 Args:
+
 - values: A list of probabilities.
 
 Returns:
+
 - self: The instance of the class.
 
 ### validate_expected_probabilities()
@@ -122,6 +137,7 @@ Returns:
 Validate the expected probabilities.
 
 Returns:
+
 - self: The instance of the class.
 
 ### validate()
@@ -129,6 +145,7 @@ Returns:
 Validate the observed random numbers and expected probabilities.
 
 Returns:
+
 - self: The instance of the class.
 
 ### calc()
@@ -140,6 +157,7 @@ null hypothesis is that the observed distribution is the same as the
 expected distribution.
 
 Returns:
+
 - self: The instance of the class.
 
 ### is_null()
@@ -147,12 +165,15 @@ Returns:
 Check if the null hypothesis is true.
 
 Args:
+
 - alpha: The significance level.
 
 Returns:
+
 - bool: True if the null hypothesis is true, False otherwise.
 
 Notes:
+
 - Scipy/Numpy hijacks bool somehow, and it becomes a bool_ object.
 - Unfortunately, this causes some problems when comparing the
 - result using the is operator (e.g bool(0.05) is False).

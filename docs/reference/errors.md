@@ -5,7 +5,8 @@
 Base class for randomgen errors.
 
 Args:
-    message (str): The error message.
+
+- message (str): The error message.
 
 ### set_message()
 
