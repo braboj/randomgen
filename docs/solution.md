@@ -2,26 +2,18 @@
 
 ### 1. Define the development environment
 
-- **Programming Language** 
-  - Python 3.12+
-- **Python IDE** 
-  - PyCharm Community Edition
-- **Code style** 
-  - PEP-8
-  - Google Doc Strings
-- **Linting** 
-  - PyCharm built-in linter
-- **Testing:** 
-  - Pytest
-- **Version Control** 
-  - Git
-- **Git Hosting** 
-  - GitHub
-- **CI/CD** 
-  - GitHub Actions
-- **Documentation** 
-  - GitHub Pages
-  - MkDocs
+| Category             | Details                   |
+|----------------------|---------------------------|
+| Programming Language | Python 3.12+              |
+| Python IDE           | PyCharm Community Edition |
+| Code style           | PEP-8, Google Doc Strings |
+| Linting              | PyCharm built-in linter   |
+| Testing              | Pytest                    |
+| Version Control      | Git                       |
+| Git Hosting          | GitHub                    |
+| CI/CD                | GitHub Actions            |
+| Documentation        | GitHub Pages, MkDocs      |
+
 
 ### 2. Validate the data from the problem statement
 
@@ -48,15 +40,15 @@ to skewed results due to under-sampling.
 
 The given distribution doesn't seem to be a binomial distribution... 
 
-![Binomial_Distribution.png](../assets/images/binomial_distribution.png)
+![Binomial_Distribution.png](assets/images/binomial_distribution.png)
 
 ... or a Poisson distribution.
 
-![Poisson_Distribution.png](../assets/images/poisson_distribution.png)
+![Poisson_Distribution.png](assets/images/poisson_distribution.png)
 
 Visually, our distribution looks like a skewed custom distribution.
 
-![Custom_Distribution.png](../assets/images/custom_distribution.png)
+![Custom_Distribution.png](assets/images/custom_distribution.png)
 
 We will assume that the given distribution is correct and proceed with the
 implementation. We will test our implementation with a large number of samples
@@ -91,7 +83,7 @@ We will implement two classes, one using `random.choices` and the other using
 interface for both classes. It will also decouple implementation from client 
 code.
 
-![system_design.png](../assets/drawio/system_design.drawio.png)
+![system_design.png](assets/drawio/system_design.drawio.png)
 
 A sample of the API design is shown below:
 
@@ -360,23 +352,10 @@ solution is well-documented, and the code is clean and readable. The solution
 is ready for deployment.
 
 
-### . Create the CI/CD pipeline
-
-We will create a GitHub Actions workflow to run the tests on every push to the
-main branch. We will also create a GitHub Actions workflow to build and push the
-Docker image to Docker Hub on every release.
-
-What we want:
-
-1. Run the tests on every push to the main branch. [+]
-3. Build and push the Docker image to Docker Hub on each push [+]
-4. Build the documentation and deploy it to GitHub Pages on every release.
-
-
 ### 18. Documentation
 
 We will use MkDocs to build the documentation. The documentation will be
-deployed to GitHub Pages. The documentation will contain the following
+deployed to GitHub Pages. The documentation will contain at least the following
 sections:
 
 1. Problem
@@ -386,7 +365,19 @@ sections:
 5. CONTRIBUTING.md
 6. README.md
 
-### . Tag the first increment
+### 19. Create the CI/CD pipeline
+
+We will create a GitHub Actions workflow to run the tests on every push to the
+main branch. We will also create a GitHub Actions workflow to build and push the
+Docker image to Docker Hub on every release.
+
+What we want:
+
+1. Run the tests on every push to the main branch.
+3. Build and push the Docker image to Docker Hub on each push.
+4. Build the documentation and deploy it to GitHub Pages on every release.
+
+### 20. Tag the first increment
 
 Till now, we were in the pre-development phase. After the tag, changes will be
 tracked using concrete issues in the commit messages.
