@@ -10,5 +10,5 @@ generating random data.
 SHORT_DESCRIPTION = """
 An application to generate random numbers using REST API.""".strip()
 
-VERSION = '0.0.0.0'
+VERSION = '0.0.1.0'
 URL = 'https://github.com/braboj/randomgen'
