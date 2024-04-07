@@ -31,15 +31,29 @@ class RandomGenMismatchError(RandomGenError):
         super().__init__(message=self.MESSAGE)
 
 
-class RandomGenSumError(RandomGenError):
+class RandomGenProbabilitySumError(RandomGenError):
     MESSAGE = "Probabilities must sum to 1."
 
     def __init__(self):
         super().__init__(message=self.MESSAGE)
 
 
-class RandomGenNegativeError(RandomGenError):
+class RandomGenProbabilityNegativeError(RandomGenError):
     MESSAGE = "Probabilities must be non-negative."
+
+    def __init__(self):
+        super().__init__(message=self.MESSAGE)
+
+
+class RandomGenMaxError(RandomGenError):
+    MESSAGE = "The quantity of random numbers exceeds the maximum limit."
+
+    def __init__(self):
+        super().__init__(message=self.MESSAGE)
+
+
+class RandomGenMinError(RandomGenError):
+    MESSAGE = "The quantity of random numbers must be positive."
 
     def __init__(self):
         super().__init__(message=self.MESSAGE)

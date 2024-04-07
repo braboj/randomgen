@@ -2,7 +2,7 @@
 
 from randomgen.errors import (
     RandomGenMismatchError,
-    RandomGenSumError,
+    RandomGenProbabilitySumError,
     RandomGenEmptyError,
     RandomGenTypeError,
 )
@@ -152,7 +152,7 @@ class RandomGenABC(metaclass=ABCMeta):
 
         # Check if the probabilities sum to 1
         elif round(sum(self._probabilities), 3) != 1:
-            raise RandomGenSumError()
+            raise RandomGenProbabilitySumError()
 
         return self
 
