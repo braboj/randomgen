@@ -1,46 +1,68 @@
-## Randomg Generator API
+## REST API
 
-A simple API to generate random numbers.
-
-### Generate random numbers
-
-Description of the method.
+### Endpoint
 
 ```plaintext
-GET /api/v2/randomgen
+GET /api/v1/randomgen
 ```
 
-Supported attributes:
+### Attributes
 
 | Attribute | Type | Required | Description                  |
 |-----------|------|----------|------------------------------|
-| `number`  | int  | Yes      | The number of random numbers |
+| `numbers` | int  | Yes      | The number of random numbers |
 
-If successful, returns [`<status_code>`](rest/index.md#status-codes) and the following
-response attributes:
 
-| Attribute                | Type     | Description              |
-|--------------------------|----------|--------------------------|
-| `random_numbers`          | list     | List of random numbers.  |
-| `attribute`              | datatype | Detailed description.    |
-
-Example request:
-
-```shell
-curl --url "<host address>/api/v2/randomgen?amount=10"
-```
-
-Example response:
+### Response
 
 ```json
-[
-    {
-      "chi_square": 6.37701149425288,
-      "df": 4,
-      "distribution": [0.01, 0.3, 0.58, 0.1, 0.01],
-      "is_fair": 1,
-      "numbers": [2, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 0, 2, 2, 0, 1, 3, 1, 1, 2, 1, 0, 1, 1, 2, 1, 2, 1, 1, 0, 0, 1, -1, 1, 1, 0, 1, 2, 1, 1, 1, 1, 1],
-      "p_value": 0.172706492508138
+{
+  "numbers": [0, 2, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, -1, 1, 0,
+    2, 1, 1, 2, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 
+    0, 1, 1, 2, 1, 2, 1, 1, 1, -1, 1, 2, 0, 1, 2, 1, 1, 1, 0, 0, 1, 1, 0, 0, 
+    1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 2, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 
+    1, -1, 0, 1, 1, 0, 1],
+  "quality": {
+    "chi_square_test": {
+      "chi_square": 4.97586206896552,
+      "df": 3,
+      "is_null": 1,
+      "p_value": 0.173573199002695
+    },
+    "expected_histogram": {
+      "-1": 0.01,
+      "0": 0.3,
+      "1": 0.58,
+      "2": 0.1,
+      "3": 0.01
+    },
+    "observed_histogram": {
+      "-1": 0.03,
+      "0": 0.27,
+      "1": 0.62,
+      "2": 0.08
     }
-]
+  },
+  "version": 1
+}
 ```
+
+[//]: # (If successful, returns [`<status_code>`]&#40;rest/index.md#status-codes&#41; and the following)
+
+[//]: # (response attributes:)
+
+### Example
+
+Windows:
+
+```shell
+curl --url "http://localhost:8080/api/v1/randomgen?amount=10"
+```
+
+Linux:
+
+```shell
+curl --url ""http://localhost:8080/api/v1/randomgen?amount=10"
+```
+
+
