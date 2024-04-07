@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from randomgen.core import RandomGenV1, RandomGenV2
 from randomgen.endpoints import RandomGenRestApi
 
+# Create the Flask application
 app = Flask(__name__)
 app.rest_api = RandomGenRestApi()
 
@@ -111,6 +112,10 @@ def handle_error(e):
     # Return the error response
     return jsonify({'error': str(e)}), 500
 
+
+###############################################################################
+# FLASK APP
+###############################################################################
 
 if __name__ == "__main__":
     app.run(debug=True)
