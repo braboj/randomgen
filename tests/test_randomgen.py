@@ -119,14 +119,14 @@ class TestRandomGenParamNumbers(object):
             randomgen.set_numbers({-1: 1, 0: 1, 1: 1, 2: 1, 3: 1})
             randomgen.validate_numbers()
 
-    def test__mixed_types(self, randomgen):
+    def test_mixed_types(self, randomgen):
         """ Test the `numbers` parameter with mixed types."""
 
         with pytest.raises(RandomGenTypeError):
             randomgen.set_numbers([-1, 0.0, "1", 2.0, 3])
             randomgen.validate_numbers()
 
-    def test__mixed_numbers(self, randomgen):
+    def test_mixed_numbers(self, randomgen):
         """ Test the `numbers` parameter with mixed numbers."""
 
         randomgen.set_numbers([-1, 0, 1, 2.0, 3])
@@ -291,10 +291,10 @@ class TestRandomGenParamProbabilities(object):
 
 @pytest.mark.parametrize("randomgen", versions, indirect=True)
 class TestRandomGenDistribution(object):
-    """ Test the distribution of random numbers."""
+    """ Test the distribution quality of random numbers."""
 
     def test_fit_pass(self, randomgen):
-        """ Test if the random numbers fit the expected distribution."""
+        """ Test that the distribution fits on big sample size."""
 
         custom_probabilities = [0.5, 0.5]
 
@@ -318,7 +318,7 @@ class TestRandomGenDistribution(object):
         assert hypothesis.is_null() is True
 
     def test_fit_fail(self, randomgen):
-        """ Test if the random numbers do not fit the expected distribution."""
+        """ Test that the distribution fits on big sample size. """
 
         custom_probabilities = [0.5, 0.5]
 
@@ -344,10 +344,11 @@ class TestRandomGenDistribution(object):
 
 @pytest.mark.parametrize("randomgen", versions, indirect=True)
 class TestRandomGenPerformance(object):
-    """ Test the performance of the random generator."""
+    """ Test that the distribution fits on high sample size."""
 
     def test_time(self, randomgen):
-        # Prepare the random generator
+        """ Test that the time execution is below 50ms. """
+
         randomgen.set_numbers([1, 2, 3, 4, 5])
         randomgen.set_probabilities([0.2, 0.2, 0.2, 0.2, 0.2])
         randomgen.validate()
