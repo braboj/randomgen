@@ -17,7 +17,9 @@ Args:
 
 - dict_obj: A dictionary of numbers and probabilities.
 
-Returns: self: The instance of the class.
+Returns: 
+
+- self: The instance of the class.
 
 ### to_dict()
 

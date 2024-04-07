@@ -8,6 +8,7 @@ performs the business logic and some checks before returning the results to
 the web framework.
 
 Attributes:
+
 - config (dict): The configuration dict used by the API.
 
 ### setup_config()
@@ -15,6 +16,7 @@ Attributes:
 Configure the Flask application using the default values.
 
 Returns:
+
 - dict: The configuration dict after the change.
 
 ### generate_random_numbers()
