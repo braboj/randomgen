@@ -1,0 +1,28 @@
+site_name: "Random Generator Application"
+
+theme:
+  name: "readthedocs"
+
+nav:
+    - Project:
+      - Home: index.md
+      - Problem Statement: problem.md
+      - Solution Journal : solution.md
+      - REST API: rest_api.md
+    - Reference Guide:
+      - Core Module: ./reference/core.md
+      - Hypothesis Module: ./reference/random_api.md
+      - Histogram Module: ./reference/histogram.md
+      - Endpoints Module: ./reference/endpoints.md
+      - Routing Module: ./reference/routing.md
+    - Tests Specification:
+      - RandomGenerator Core: ./tests/test_core.md
+      - Hypothesis Testing: ./tests/test_random_api.md
+      - Histogram: ./tests/test_histogram.md
+      - REST API Endpoints: ./tests/test_endpoints.md
+      - Flask Routing: ./tests/test_routing.md
+
+
+plugins:
+- search
+- section-index
