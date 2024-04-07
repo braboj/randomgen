@@ -27,6 +27,4 @@ example, use the following link to create 100 random numbers:
 http://localhost:8080/api/v1/randomgen?numbers=100
 ```
 
-For more information, you can check the [RandomGen Project Pages](rest_api.md).
-
 Enjoy!
