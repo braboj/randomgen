@@ -20,10 +20,10 @@ MAX_NUMBERS = 10000
 class RandomGenRestApi(object):
     """Random Number Generator REST API.
 
-    This class wraps the Flask application and provides a REST API for
-    generating random numbers based on a given set of numbers and their
-    probabilities. The API also provides a way to configure the numbers and
-    probabilities used for generating random numbers.
+    This class implements the REST API logic for the RandomGen project. The
+    implementation is not aware of the web framework that is being used. It
+    performs the business logic and some checks before returning the results
+    to the web framework.
 
     Attributes:
         config (dict): The configuration dict used by the API.
