@@ -34,9 +34,10 @@ Python versions < 3.5.
 
 ## Testing
 
-Use [GitHub Actions](https://github.com/braboj/random/actions) to run 
-tests on each pull request. You can run these tests yourself as well. To do 
-this, first install the test dependencies:
+Use [GitHub Actions] to run tests on each pull request. You can run these 
+tests yourself as well. To do this, first install the test dependencies:
+
+[GitHub Actions]: https://github.com/braboj/randomgen/actions
 
 ```bash
 pip install -r ./tests/requirements.txt
