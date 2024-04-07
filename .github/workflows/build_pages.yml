@@ -37,5 +37,5 @@ jobs:
       - name: Install mkdocs
         run: pip install mkdocs
       - name: Deploy Pages
-        run: ​poetry run mkdocs gh-deploy
+        run: ​mkdocs gh-deploy
         
