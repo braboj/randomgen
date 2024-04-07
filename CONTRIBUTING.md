@@ -6,7 +6,7 @@ just a few small guidelines you need to follow.
 First, read these guidelines. Before you begin making changes, state your 
 intent to do so in an Issue. Then, fork the project. Make changes in your 
 copy of the repository. Then open a pull request once your changes are ready.
-A discussion about your change will follow, and if accepted your contribution
+A discussion about your change will follow, and if accepted, your contribution
 will be incorporated into the project codebase.
 
 ## Code reviews
@@ -18,7 +18,7 @@ Consult [GitHub Help] for more information on using pull requests.
 
 ## Code style
 
-In general, Python Fire follows the guidelines in the
+In general, the project follows the guidelines in the
 [Google Python Style Guide].
 
 In addition, the project follows a convention of:
