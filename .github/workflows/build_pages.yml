@@ -39,11 +39,12 @@ jobs:
       - run: python --version
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Install Poetry
+        uses: knowsuchagency/poetry-install@v2
       - name: Install mkdocs
         run: |
           pip install mkdocs
           pip install mkdocs-section-index
-      - name: Deploy Pages
-        run: ​python -m mkdocs gh-deploy
+          ​poetry mkdocs gh-deploy
         
         
