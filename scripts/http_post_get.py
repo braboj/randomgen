@@ -1,7 +1,7 @@
 import requests
 
 # Endpoint URL
-url = 'http://127.0.0.1:5000/api/config'
+url = 'http://127.0.0.1:8080/api/config'
 
 # Sample data
 data = {
@@ -19,7 +19,7 @@ else:
     print("Error:", response.status_code)
 
 # Endpoint URL
-url = 'http://127.0.0.1:5000/api/v1/randomgen'
+url = 'http://127.0.0.1:8080/api/v1/randomgen'
 
 # Query parameters
 params = {'numbers': 10}
