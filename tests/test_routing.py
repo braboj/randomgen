@@ -24,7 +24,7 @@ def webserver():
 ###############################################################################
 
 class TestRestApiRouting(object):
-    """Test the REST API endpoints."""
+    """ Test the REST API routing."""
 
     @classmethod
     def setup_class(cls):
