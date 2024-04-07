@@ -218,6 +218,8 @@ class RandomGenABC(metaclass=ABCMeta):
 class RandomGenV1(RandomGenABC):
 
     def next_num(self):
+        """ Generate a random number using the random.random() function."""
+
         rand = random.random()
         for i, cum_prob in enumerate(self._cumulative_probabilities):
             if rand <= cum_prob:
@@ -227,7 +229,7 @@ class RandomGenV1(RandomGenABC):
 class RandomGenV2(RandomGenABC):
 
     def next_num(self):
-        # Use random.choices to select a number based on the probabilities
+        """ Generate a random number using the random.choice() function."""
         return random.choices(self._numbers, self._probabilities, k=1)[0]
 
 
