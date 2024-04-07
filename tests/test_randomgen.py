@@ -3,7 +3,13 @@ import pytest
 
 from randomgen.core import RandomGenV1, RandomGenV2
 from randomgen.hypothesis import ChiSquareTest
-from randomgen.errors import *
+from randomgen.errors import (
+    RandomGenTypeError,
+    RandomGenEmptyError,
+    RandomGenMismatchError,
+    RandomGenProbabilitySumError,
+
+)
 
 versions = [RandomGenV1, RandomGenV2]
 
@@ -264,21 +270,21 @@ class TestRandomGenParamProbabilities(object):
     def test_sum_is_zero(self, randomgen):
         """ Test the `probabilities` parameter with a sum of zero."""
 
-        with pytest.raises(RandomGenSumError):
+        with pytest.raises(RandomGenProbabilitySumError):
             randomgen.set_probabilities([0.0, 0.0, 0.0, 0.0, 0.0])
             randomgen.validate_probabilities()
 
     def test_sum_is_greater_than_one(self, randomgen):
         """ Test the `probabilities` parameter with a sum greater than one."""
 
-        with pytest.raises(RandomGenSumError):
+        with pytest.raises(RandomGenProbabilitySumError):
             randomgen.set_probabilities([0.2, 0.2, 0.2, 0.2, 0.3])
             randomgen.validate()
 
     def test_sum_is_less_than_one(self, randomgen):
         """ Test the `probabilities` parameter with a sum less than one."""
 
-        with pytest.raises(RandomGenSumError):
+        with pytest.raises(RandomGenProbabilitySumError):
             randomgen.set_probabilities([0.2, 0.2, 0.2, 0.2, 0.1])
             randomgen.validate()
 

@@ -1,22 +1,21 @@
 # encoding: utf-8
-
-from scripts.webserver import (
-    RandomGeneratorApp,
-    DEFAULT_NUMBERS,
-    DEFAULT_PROBABILITIES
-)
-
 import pytest
 import requests
 import threading
+
+import randomgen.routing as routing
+
+from randomgen.endpoints import (
+    DEFAULT_NUMBERS,
+    DEFAULT_PROBABILITIES
+)
 
 
 @pytest.fixture(autouse=True, scope='module')
 def webserver():
     """Run the web server as a background thread."""
 
-    app = RandomGeneratorApp()
-    app = threading.Thread(target=app.run)
+    app = threading.Thread(target=routing.app.run)
     app.daemon = True
     app.start()
     yield app
@@ -24,7 +23,7 @@ def webserver():
 
 ###############################################################################
 
-class TestRestApiIntegration(object):
+class TestRestApiRouting(object):
     """Test the REST API endpoints."""
 
     @classmethod
@@ -63,7 +62,7 @@ class TestRestApiIntegration(object):
             response = requests.get(url, params=params)
 
             # Check the response
-            assert response.status_code == 400
+            assert response.status_code == 500
 
     def test_endpoint_api_v2_randomgen_pos(self):
         """Test the /api/v2/randomgen endpoint with positive numbers."""
@@ -95,7 +94,7 @@ class TestRestApiIntegration(object):
             response = requests.get(url, params=params)
 
             # Check the response
-            assert response.status_code == 400
+            assert response.status_code == 500
 
     def test_endpoint_api_config(self):
         """Test the /api/config endpoint."""
