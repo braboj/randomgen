@@ -11,17 +11,16 @@ nav:
       - REST API: rest_api.md
     - Reference Guide:
       - Core Module: ./reference/core.md
-      - Hypothesis Module: ./reference/random_api.md
+      - Hypothesis Module: ./reference/hypothesis.md
       - Histogram Module: ./reference/histogram.md
       - Endpoints Module: ./reference/endpoints.md
       - Routing Module: ./reference/routing.md
     - Tests Specification:
-      - RandomGenerator Core: ./tests/test_core.md
-      - Hypothesis Testing: ./tests/test_random_api.md
-      - Histogram: ./tests/test_histogram.md
-      - REST API Endpoints: ./tests/test_endpoints.md
-      - Flask Routing: ./tests/test_routing.md
-
+      - Core Tests: ./tests/test_core.md
+      - Hypothesis Tests: ./tests/test_random_api.md
+      - Histogram Tests: ./tests/test_histogram.md
+      - Endpoints Tests: ./tests/test_endpoints.md
+      - Routing Tests: ./tests/test_routing.md
 
 plugins:
 - search
