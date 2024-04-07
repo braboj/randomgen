@@ -1,5 +1,6 @@
 [![Tests](https://github.com/braboj/randomgen/actions/workflows/application_tests.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/application_tests.yml)
 [![Deployment](https://github.com/braboj/randomgen/actions/workflows/image_deployment.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/image_deployment.yml)
+[![Deploy Pages](https://github.com/braboj/randomgen/actions/workflows/build_pages.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/build_pages.yml)
 
 # Overview
 
