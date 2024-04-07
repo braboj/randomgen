@@ -17,7 +17,7 @@ nav:
       - Routing Module: ./reference/routing.md
     - Tests Specification:
       - Core Tests: ./tests/test_core.md
-      - Hypothesis Tests: ./tests/test_random_api.md
+      - Hypothesis Tests: ./tests/test_hypothesis.md
       - Histogram Tests: ./tests/test_histogram.md
       - Endpoints Tests: ./tests/test_endpoints.md
       - Routing Tests: ./tests/test_routing.md
