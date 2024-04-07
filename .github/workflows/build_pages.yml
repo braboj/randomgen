@@ -37,7 +37,7 @@ jobs:
       - name: Install mkdocs
         run: |
           pip install mkdocs
-          pip install mkdocs-search-index
+          pip install mkdocs-section-index
       - name: Deploy Pages
         run: ​python -m mkdocs gh-deploy
         
