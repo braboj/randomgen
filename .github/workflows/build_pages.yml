@@ -35,7 +35,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Install mkdocs
-        run: pip install mkdocs
+        run: |
+          pip install mkdocs
+          pip install mkdocs-search-index
       - name: Deploy Pages
-        run: ​mkdocs gh-deploy
+        run: ​python -m mkdocs gh-deploy
+        
         
