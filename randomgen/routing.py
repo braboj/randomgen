@@ -8,17 +8,29 @@ app.rest_api = RandomGenRestApi()
 
 @app.route('/')
 def hello_world():
-    """Route for the home page."""
+    """Route for the default home page.
+
+    Returns:
+        str: The home page message.
+
+    """
+
+    # Return the home page message
     return app.rest_api.home_endpoint()
 
 
 @app.get('/api/v1/randomgen')
 def api_v1_randomgen():
-    """Route for the /api/v1/randomgen endpoint."""
+    """Route for the /api/v1/randomgen endpoint.
+
+    Returns:
+        flask.Response: The response from the randomgen endpoint.
+    """
 
     # Parse the query parameter
     quantity = request.args.get('numbers', default=1, type=int)
 
+    # Return the response
     return jsonify(
         app.rest_api
         .randomgen_endpoint(
@@ -30,11 +42,17 @@ def api_v1_randomgen():
 
 @app.get('/api/v2/randomgen')
 def api_v2_randomgen():
-    """Route for the /api/v2/randomgen endpoint."""
+    """Route for the /api/v2/randomgen endpoint.
+
+    Returns:
+        flask.Response: The response from the randomgen endpoint.
+
+    """
 
     # Parse the query parameter
     quantity = request.args.get('numbers', default=1, type=int)
 
+    # Return the response
     return jsonify(
         app.rest_api
         .randomgen_endpoint(
@@ -46,10 +64,18 @@ def api_v2_randomgen():
 
 @app.post('/api/config')
 def api_config():
-    """Route for the /api/config endpoint."""
+    """Route for the /api/config endpoint.
 
+    Returns:
+        flask.Response: The response from the config endpoint.
+
+    """
+
+    # Parse the request body
     numbers = request.json['numbers']
     probabilities = request.json['probabilities']
+
+    # Return the response
     return jsonify(
         app.rest_api.config_endpoint(
             numbers=numbers,
@@ -60,7 +86,14 @@ def api_config():
 
 @app.get('/api/reset')
 def api_reset():
-    """Route for the /api/reset endpoint."""
+    """Route for the /api/reset endpoint.
+
+    Returns:
+        flask.Response: The response from the reset endpoint.
+
+    """
+
+    # Return the response
     return jsonify(
         app.rest_api.reset_endpoint()
     )
@@ -68,7 +101,14 @@ def api_reset():
 
 @app.errorhandler(Exception)
 def handle_error(e):
-    """Error handler for the application."""
+    """Error handler for the application.
+
+    Returns:
+        flask.Response: The error response.
+
+    """
+
+    # Return the error response
     return jsonify({'error': str(e)}), 500
 
 
