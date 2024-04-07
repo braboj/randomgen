@@ -130,19 +130,20 @@ class TestRestApiRouting(object):
             'numbers': [1, 2, 3],
             'probabilities': [0.2, 0.2, 0.6]
         }
+
+        # Send a POST request
         response = requests.post(url, json=data)
         response_json = response.json()
 
+        # Check the response
         assert response_json['numbers'] == data['numbers']
         assert response_json['probabilities'] == data['probabilities']
 
         # Tested Endpoint URL
         url = self.base_url + '/api/reset'
 
-        # Send a GET request
-        response = requests.get(url)
-
-        # Convert response to JSON
+        # Send a POST request
+        response = requests.post(url, json=data)
         response_json = response.json()
 
         # Check the response
