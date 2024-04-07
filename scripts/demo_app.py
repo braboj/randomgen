@@ -17,12 +17,12 @@ app.max_numbers = 10000
 # Helpers
 ###############################################################################
 
-def generate_random_numbers(randomgen, amount):
+def generate_random_numbers(randomgen, quantity):
     """ Generate random numbers using the given random number generator.
 
     Args:
         randomgen: The random number generator object.
-        amount: The number of random numbers to generate.
+        quantity: The quantity of random numbers to generate.
 
     Returns:
         dict: A dictionary containing the generated random numbers and the
@@ -30,15 +30,15 @@ def generate_random_numbers(randomgen, amount):
     """
 
     # Check if the number of items to be generated is positive
-    if amount <= 0:
+    if quantity <= 0:
         return jsonify({'error': 'Quantity must be greater than 0'})
 
     # Check if the number of items to be generated is within the limit
-    elif amount > app.max_numbers:
+    elif quantity > app.max_numbers:
         return jsonify({'error': 'Quantity cannot exceed {app.max_numbers}'})
 
     # Generate random numbers
-    random_numbers = [randomgen.next_num() for _ in range(amount)]
+    random_numbers = [randomgen.next_num() for _ in range(quantity)]
 
     # Expected distribution
     expected = dict(zip(app.numbers, app.probabilities))
@@ -86,6 +86,15 @@ def generate_random_numbers(randomgen, amount):
 # Global error handler
 @app.errorhandler(Exception)
 def handle_error(e):
+    """ Handle all exceptions.
+
+    Args:
+        e: The exception object.
+
+    Returns:
+        tuple: A tuple containing the error message and the status code.
+    """
+
     return jsonify({'error': str(e)}), 500
 
 
@@ -95,6 +104,8 @@ def handle_error(e):
 
 @app.get('/')
 def hello_world():
+    """ The home page of the project. """
+
     body = (
         """
         <h1>Random Number Generator API</h1>
@@ -124,6 +135,12 @@ def hello_world():
 
 @app.post('/api/config')
 def api_config():
+    """ Set the configuration of the random number generator.
+
+    Returns:
+        dict: A dictionary containing the new numbers and probabilities.
+    """
+
     app.numbers = request.json['numbers']
     app.probabilities = request.json['probabilities']
     return jsonify({'numbers': app.numbers, 'probabilities': app.probabilities})
@@ -132,7 +149,15 @@ def api_config():
 # A route to get the configuration of the random number generator
 @app.get('/api/v1/randomgen')
 def api_v1_generate_numbers():
-    # Query: /api/v1/randomgen?numbers=10
+    """ Generate random numbers using the RandomGenV1 class.
+
+    Examples:
+        GET /api/v1/randomgen?numbers=1000
+
+    Returns:
+        dict: A dictionary containing the generated random numbers and the
+        results of the Chi-Square test.
+    """
 
     # Parse the query parameter amount
     amount = request.args.get('numbers', default=1, type=int)
@@ -153,7 +178,15 @@ def api_v1_generate_numbers():
 
 @app.get('/api/v2/randomgen')
 def api_v2_generate_numbers():
-    # Query: /api/v2/randomgen?numbers=10
+    """ Generate random numbers using the RandomGenV2 class.
+
+    Examples:
+        GET /api/v2/randomgen?numbers=1000
+
+    Returns:
+        dict: A dictionary containing the generated random numbers and the
+        results of the Chi-Square test.
+    """
 
     # Parse the query parameter amount
     amount = request.args.get('numbers', default=1, type=int)
