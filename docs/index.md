@@ -29,7 +29,7 @@ http://localhost:8080/api/v1/randomgen?numbers=100
 ```
 
 The official project repository is available on 
-[GitHub](https://github.com/braboj/randomgen). Feel free to contribute to the
-project by creating issues or pull requests.
+[https://github.com/braboj/randomgen](https://github.com/braboj/randomgen). 
+Feel free to contribute to the project by creating issues or pull requests.
 
 Enjoy!
