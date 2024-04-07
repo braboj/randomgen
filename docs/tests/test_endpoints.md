@@ -10,7 +10,7 @@
 ```text
 for num in (1, 1000, 10000):
     self.api.randomgen_endpoint(RandomGenV1, num)
-  ```
+```
 
 ## test_endpoint_api_v1_randomgen_neg
 - **Description**: Test the randomgen v1 endpoint with negative scenarios.
@@ -26,7 +26,7 @@ with pytest.raises(RandomGenMinError):
 with pytest.raises(RandomGenMaxError):
     for num in (10001,):
         self.api.randomgen_endpoint(RandomGenV1, num)
-  ```
+```
 
 ## test_endpoint_v2_randomgen_pos
 
@@ -65,7 +65,7 @@ self.api.config_endpoint(numbers=[1, 2, 3],
 
 assert self.api.config['NUMBERS'] == [1, 2, 3]
 assert self.api.config['PROBABILITIES'] == [0.2, 0.2, 0.6]
-  ```
+```
 
 ## test_endpoint_api_config_neg
 - **Description**: Test the configuration endpoint with negative scenarios.
@@ -98,7 +98,7 @@ with pytest.raises(RandomGenTypeError):
 
 with pytest.raises(RandomGenTypeError):
     self.api.config_endpoint(numbers=1, probabilities=[0.2, 0.2, 0.6])
-  ```
+```
 
 ## test_endpoint_api_reset
 
