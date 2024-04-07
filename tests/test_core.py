@@ -231,21 +231,21 @@ class TestRandomGenParamProbabilities(object):
             randomgen.set_probabilities({-1: 1, 0: 1, 1: 1, 2: 1, 3: 1})
             randomgen.validate_probabilities()
 
-    def test__mixed_types(self, randomgen):
+    def test_mixed_types(self, randomgen):
         """ Test the `probabilities` parameter with mixed types."""
 
         with pytest.raises(RandomGenTypeError):
             randomgen.set_probabilities([-1, 0.0, "1", 2.0, 3])
             randomgen.validate_probabilities()
 
-    def test__mixed_numbers(self, randomgen):
+    def test_mixed_numbers(self, randomgen):
         """ Test the `probabilities` parameter with mixed numbers."""
 
         with pytest.raises(RandomGenTypeError):
             randomgen.set_probabilities([-0.2, 0.4, 0.2, 0.2, 0.4])
             randomgen.validate_probabilities()
 
-    def test__is_negative(self, randomgen):
+    def test_is_negative(self, randomgen):
         """ Test the `probabilities` parameter with negative numbers."""
 
         with pytest.raises(RandomGenTypeError):

@@ -132,7 +132,7 @@ class TestChiSquareParamObservedNums(object):
 ##############################################################################
 
 @pytest.mark.parametrize("hypothesis", variations, indirect=True)
-class TestChiSquareParamProbabilities(object):
+class TestChiSquareExpectedParamProbabilities(object):
     """ Test the `expected_probabilities` parameter. """
 
     def test_none(self, hypothesis):
