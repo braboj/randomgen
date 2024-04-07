@@ -16,37 +16,75 @@ class HypothesisTestAbc(metaclass=ABCMeta):
 
     @abstractmethod
     def set_observed_numbers(self, values):
-        """ Set the observed random numbers."""
+        """ Set the observed random numbers.
+
+        Args:
+            values: A list of random numbers.
+
+        Returns:
+            self: The instance of the class.
+
+        """
         raise NotImplementedError
 
     @abstractmethod
     def validate_observed_numbers(self):
-        """ Validate the observed random numbers."""
+        """ Validate the observed random numbers.
+
+        Returns:
+            self: The instance of the class.
+        """
         raise NotImplementedError
 
     @abstractmethod
     def set_expected_probabilities(self, values):
-        """ Set the expected probabilities."""
+        """ Set the expected probabilities.
+
+        Args:
+            values: A list of probabilities.
+
+        Returns:
+            self: The instance of the class.
+        """
         raise NotImplementedError
 
     @abstractmethod
     def validate_expected_probabilities(self):
-        """ Validate the expected probabilities."""
+        """ Validate the expected probabilities.
+
+        Returns:
+            self: The instance of the class.
+        """
         raise NotImplementedError
 
     @abstractmethod
     def validate(self):
-        """ Validate the observed random numbers and expected probabilities."""
+        """ Validate the observed random numbers and expected probabilities.
+
+        Returns:
+            self: The instance of the class.
+        """
         raise NotImplementedError
 
     @abstractmethod
     def calc(self):
-        """ Perform the hypothesis test."""
+        """ Perform the hypothesis test.
+
+        Returns:
+            self: The instance of the class.
+        """
         raise NotImplementedError
 
     @abstractmethod
     def is_null(self, alpha=0.05):
-        """ Check if the null hypothesis is true."""
+        """ Check if the null hypothesis is true.
+
+        Args:
+            alpha: The significance level.
+
+        Returns:
+            bool: True if the null hypothesis is true, False otherwise.
+        """
         raise NotImplementedError
 
 
