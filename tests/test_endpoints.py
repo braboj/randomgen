@@ -31,7 +31,7 @@ class TestRandomGenRestApi(object):
     def setup_class(cls):
         cls.api = RandomGenRestApi()
 
-    def test_endpoint_v1_randomgen_pos(self):
+    def test_endpoint_api_v1_randomgen_pos(self):
         """Test the randomgen v1 endpoint with positive scenarios. """
 
         for num in (1, 1000, 10000):

@@ -1,6 +1,6 @@
 # Endpoints Module Tests
 
-## test_endpoint_v1_randomgen_pos
+## test_endpoint_api_v1_randomgen_pos
 
 
 - **Description**: Test the randomgen v1 endpoint with positive scenarios. 
