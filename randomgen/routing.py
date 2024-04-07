@@ -85,7 +85,7 @@ def api_config():
     )
 
 
-@app.get('/api/reset')
+@app.post('/api/reset')
 def api_reset():
     """Route for the /api/reset endpoint.
 
