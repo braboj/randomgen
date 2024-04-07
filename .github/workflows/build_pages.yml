@@ -1,5 +1,6 @@
 name: Publish docs with Material for MKDocs
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - "main"
