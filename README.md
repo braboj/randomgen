@@ -1,6 +1,6 @@
 [![Test Application](https://github.com/braboj/randomgen/actions/workflows/test_application.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/test_application.yml)
-[![Deployment](https://github.com/braboj/randomgen/actions/workflows/image_deployment.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/image_deployment.yml)
-[![Deploy Pages](https://github.com/braboj/randomgen/actions/workflows/build_pages.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/build_pages.yml)
+[![Deploy Image](https://github.com/braboj/randomgen/actions/workflows/deploy_image.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/deploy_image.yml)
+[![Deploy Image](https://github.com/braboj/randomgen/actions/workflows/deploy_image.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/deploy_image.yml)
 
 # Overview
 
