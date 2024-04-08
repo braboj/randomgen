@@ -1,4 +1,4 @@
-[![Tests](https://github.com/braboj/randomgen/actions/workflows/application_tests.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/application_tests.yml)
+[![Test Application](https://github.com/braboj/randomgen/actions/workflows/test_application.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/test_application.yml)
 [![Deployment](https://github.com/braboj/randomgen/actions/workflows/image_deployment.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/image_deployment.yml)
 [![Deploy Pages](https://github.com/braboj/randomgen/actions/workflows/build_pages.yml/badge.svg)](https://github.com/braboj/randomgen/actions/workflows/build_pages.yml)
 
@@ -34,7 +34,7 @@ following link to create 100 random numbers:
 http://localhost:8080/api/v1/randomgen?numbers=100
 ```
 
-## Next Steps
+# Next Steps
  - For more information, you can check [RandomGen Project Pages](https://braboj.github.io/randomgen/).
  - To contribute, please visit [Contributing](CONTRIBUTING.md)
  - To leave feedback, please visit [Discussions](https://github.com/braboj/randomgen/discussions/landing)
