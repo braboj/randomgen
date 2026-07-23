@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=82.0.1"]
+requires = ["setuptools>=83.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -28,7 +28,7 @@ test = [
     "pytest~=9.1",
     "pytest-cov~=7.1",
     "requests~=2.34.2",
-    "schemathesis~=4.21.10",
+    "schemathesis~=4.24.2",
 ]
 # End-to-end tests: real containers (Testcontainers, Podman/Docker backend)
 # and a real browser (Playwright). Heavier; kept out of the fast `test` gate.
@@ -36,14 +36,14 @@ e2e = [
     "pytest~=9.1",
     "requests~=2.34.2",
     "testcontainers~=4.14",
-    "playwright~=1.60",
+    "playwright~=1.61",
     "pytest-playwright~=0.8",
 ]
 # Full developer toolchain: tests plus the static-analysis stack.
 dev = [
     "randomgen[test]",
-    "ruff~=0.15.19",
-    "mypy~=2.1",
+    "ruff~=0.15.22",
+    "mypy~=2.3",
     "types-requests",
     "build",
 ]
